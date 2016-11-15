@@ -51,9 +51,12 @@ namespace SS_OpenCV
                     {
                         for (x = 0; x < width; x++)
                         {
-                            /*B*/dataPtr[0] = (byte)(255 - (int)dataPtr[0]);
-                            /*G*/dataPtr[1] = (byte)(255 - (int)dataPtr[1]);
-                            /*R*/dataPtr[2] = (byte)(255 - (int)dataPtr[2]);
+                            /*B*/
+                            dataPtr[0] = (byte)(255 - (int)dataPtr[0]);
+                            /*G*/
+                            dataPtr[1] = (byte)(255 - (int)dataPtr[1]);
+                            /*R*/
+                            dataPtr[2] = (byte)(255 - (int)dataPtr[2]);
 
                             // advance the pointer to the next pixel
                             dataPtr += nChan;
@@ -88,7 +91,7 @@ namespace SS_OpenCV
                 int nChan = m.nChannels; // number of channels - 3
                 int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
                 int x, y;
-                        
+
                 if (nChan == 3) // image in RGB
                 {
                     for (y = 0; y < height; y++)
@@ -113,7 +116,7 @@ namespace SS_OpenCV
                 }
             }
         }
-        
+
 
         public enum Component { RED, GREEN, BLUE }
 
@@ -146,9 +149,9 @@ namespace SS_OpenCV
                         for (x = 0; x < width; x++)
                         {
                             //obtém as 3 componentes
-                            if(color == Component.BLUE)
+                            if (color == Component.BLUE)
                                 gray = dataPtr[0];
-                            else if(color== Component.GREEN)
+                            else if (color == Component.GREEN)
                                 gray = dataPtr[1];
                             else
                                 gray = dataPtr[2];
@@ -200,10 +203,10 @@ namespace SS_OpenCV
                         int srcX = x - dX,
                             srcY = y - dY;
 
-                        if (srcY >= 0 && srcY < height && 
-                            srcX >= 0 && srcX < width   )
+                        if (srcY >= 0 && srcY < height &&
+                            srcX >= 0 && srcX < width)
                         {
-                            byte* p = srcPtr + (nChan * width + padding) * srcY + nChan * srcX ;
+                            byte* p = srcPtr + (nChan * width + padding) * srcY + nChan * srcX;
                             for (int i = 0; i < nChan; i++) dataPtr[i] = p[i];
                             byte val = p[0];
                             dataPtr[0] = val;
@@ -220,7 +223,7 @@ namespace SS_OpenCV
                     dataPtr += padding;
                 }
             }
-            
+
         }
 
         /// <summary>
@@ -269,7 +272,7 @@ namespace SS_OpenCV
                         //byte* srcPoint = (byte*)(srcPtr + (lineOffset) * srcY + nChan * srcX);
 
 
-                       // dataPtr[0] = b; dataPtr[1] = g; dataPtr[2] = r;
+                        // dataPtr[0] = b; dataPtr[1] = g; dataPtr[2] = r;
 
                         lineSrcX += wVecX;
                         lineSrcY *= wVecY;
@@ -295,10 +298,10 @@ namespace SS_OpenCV
         internal static void Avg(Image<Bgr, byte> img, int filterSize)
         {
             int avgHeight = filterSize,
-                avgWidth  = filterSize;
+                avgWidth = filterSize;
 
             int dHeight = avgHeight / 2,
-                dWidth  = avgWidth  / 2;
+                dWidth = avgWidth / 2;
 
             uint area = (uint)(avgHeight * avgWidth);
 
@@ -328,8 +331,8 @@ namespace SS_OpenCV
                     {
 
                         sumR = 0; sumG = 0; sumB = 0;
-                        for(int i= - dHeight; i<=dHeight; i++)
-                            for(int j= -dWidth; j<=dWidth; j++)
+                        for (int i = -dHeight; i <= dHeight; i++)
+                            for (int j = -dWidth; j <= dWidth; j++)
                             {
                                 int srcX = x + i,
                                     srcY = y + j;
@@ -341,9 +344,9 @@ namespace SS_OpenCV
                                 if (srcY >= height) srcY -= srcY - height;
                                 /*COPY EDGES*/
                                 if (srcX < 0) srcX = 0;
-                                if (srcX >= width) srcX = width-1;
+                                if (srcX >= width) srcX = width - 1;
                                 if (srcY < 0) srcY = 0;
-                                if (srcY >= height) srcY = height-1;
+                                if (srcY >= height) srcY = height - 1;
                                 /**/
                                 byte* p = srcPtr + (lineOffset) * srcY + nChan * srcX;
 
@@ -392,24 +395,27 @@ namespace SS_OpenCV
                 {
                     for (x = 0; x < width; x++)
                     {
-                        for (int component = 0; component < nChan; component++){
+                        for (int component = 0; component < nChan; component++)
+                        {
                             int s;
                             if (y < (height - 1) && x < (width - 1))
                             {
-                                 s = Math.Abs(srcPtr[(lineOffset) * y + nChan * x + component] -
-                                              srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component])
-                                   + Math.Abs(srcPtr[(lineOffset) * y + nChan * (x + 1) + component] -
-                                              srcPtr[(lineOffset) * (y + 1) + nChan * x + component]);
+                                s = Math.Abs(srcPtr[(lineOffset) * y + nChan * x + component] -
+                                             srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component])
+                                  + Math.Abs(srcPtr[(lineOffset) * y + nChan * (x + 1) + component] -
+                                             srcPtr[(lineOffset) * (y + 1) + nChan * x + component]);
                             }
                             else if (y == (height - 1))
                             {
                                 if (x == (width - 1)) { s = 0; }
-                                else {
+                                else
+                                {
                                     s = Math.Abs(srcPtr[(lineOffset) * y + nChan * x + component] -
                                                  srcPtr[(lineOffset) * y + nChan * (x + 1) + component]) * 2;
                                 }
                             }
-                            else{
+                            else
+                            {
                                 s = Math.Abs(srcPtr[(lineOffset) * y + nChan * x + component] -
                                              srcPtr[(lineOffset) * (y + 1) + nChan * x + component]) * 2;
                             }
@@ -483,131 +489,143 @@ namespace SS_OpenCV
                                              srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] * 2 -
                                              srcPtr[(lineOffset) * (y - 1) + nChan * (x + 1) + component]
                                              );
-                            } else if (y == 0) {///Top border
-                                if (x == 0) {
-                                    s = Math.Abs(srcPtr[(lineOffset) * (  y  ) + nChan * (  x  ) + component] * 3 +
-                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (  x  ) + component] -
-
-                                                 srcPtr[(lineOffset) * (  y  ) + nChan * (x + 1) + component] * 3 -
-                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component]
-                                             )
-                                      + Math.Abs(srcPtr[(lineOffset) * (y + 1) + nChan * (  x  ) + component] * 3 +
-                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component] -
-
-                                                 srcPtr[(lineOffset) * (  y  ) + nChan * (  x  ) + component] * 3 -
-                                                 srcPtr[(lineOffset) * (  y  ) + nChan * (x + 1) + component]
-                                             );
-                                } else if (x == (width - 1)) {
-                                    s = Math.Abs(srcPtr[(lineOffset) * (  y  ) + nChan * (x - 1) + component] * 3 +
-                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] -
-
-                                                 srcPtr[(lineOffset) * (  y  ) + nChan * (  x  ) + component] * 3 -
-                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (  x  ) + component]
-                                             )
-                                      + Math.Abs(srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] +
-                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (  x  ) + component] * 3 -
-
-                                                 srcPtr[(lineOffset) * (  y  ) + nChan * (x - 1) + component] -
-                                                 srcPtr[(lineOffset) * (  y  ) + nChan * (  x  ) + component] * 3
-                                             );
-                                }
-                                else {
-                                    s = Math.Abs(srcPtr[(lineOffset) * (  y  ) + nChan * (x - 1) + component] * 3 +
-                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] -
-
-                                                 srcPtr[(lineOffset) * (  y  ) + nChan * (x + 1) + component] * 3 -
-                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component]
-                                             )
-                                      + Math.Abs(srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] +
-                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (  x  ) + component] * 2 +
-                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component] -
-
-                                                 srcPtr[(lineOffset) * (  y  ) + nChan * (x - 1) + component] -
-                                                 srcPtr[(lineOffset) * (  y  ) + nChan * (  x  ) + component] * 2 -
-                                                 srcPtr[(lineOffset) * (  y  ) + nChan * (x + 1) + component]
-                                             );
-                                }
-                            } else if (y == (height - 1)) {
+                            }
+                            else if (y == 0)
+                            {///Top border
                                 if (x == 0)
                                 {
-                                    s = Math.Abs(srcPtr[(lineOffset) * (  y  ) + nChan * (  x  ) + component] * 3 +
-                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (  x  ) + component] -
-                                              
-                                                 srcPtr[(lineOffset) * (  y  ) + nChan * (x + 1) + component] * 3 -
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 3 +
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component] -
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component] * 3 -
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component]
+                                             )
+                                      + Math.Abs(srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component] * 3 +
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component] -
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 3 -
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component]
+                                             );
+                                }
+                                else if (x == (width - 1))
+                                {
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] * 3 +
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] -
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 3 -
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component]
+                                             )
+                                      + Math.Abs(srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] +
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component] * 3 -
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] -
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 3
+                                             );
+                                }
+                                else
+                                {
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] * 3 +
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] -
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component] * 3 -
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component]
+                                             )
+                                      + Math.Abs(srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] +
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component] * 2 +
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component] -
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] -
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 2 -
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component]
+                                             );
+                                }
+                            }
+                            else if (y == (height - 1))
+                            {
+                                if (x == 0)
+                                {
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 3 +
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] -
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component] * 3 -
                                                  srcPtr[(lineOffset) * (y - 1) + nChan * (x + 1) + component]
                                              )
-                                      + Math.Abs(srcPtr[(lineOffset) * (  y  ) + nChan * (  x  ) + component] * 3 +
-                                                 srcPtr[(lineOffset) * (  y  ) + nChan * (x + 1) + component] -
-                                              
-                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (  x  ) + component] * 3 -
+                                      + Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 3 +
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component] -
+
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] * 3 -
                                                  srcPtr[(lineOffset) * (y - 1) + nChan * (x + 1) + component]
                                              );
                                 }
                                 else if (x == (width - 1))
                                 {
-                                    s = Math.Abs(srcPtr[(lineOffset) * (  y  ) + nChan * (x - 1) + component] * 3 +
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] * 3 +
                                                  srcPtr[(lineOffset) * (y - 1) + nChan * (x - 1) + component] -
-                                              
-                                                 srcPtr[(lineOffset) * (  y  ) + nChan * (  x  ) + component] * 3 -
-                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (  x  ) + component]
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 3 -
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component]
                                              )
-                                      + Math.Abs(srcPtr[(lineOffset) * (  y  ) + nChan * (x - 1) + component] +
-                                                 srcPtr[(lineOffset) * (  y  ) + nChan * (  x  ) + component] * 3 -
-                                              
+                                      + Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] +
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 3 -
+
                                                  srcPtr[(lineOffset) * (y - 1) + nChan * (x - 1) + component] -
-                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (  x  ) + component] * 3
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] * 3
                                              );
                                 }
                                 else
                                 {
-                                    s = Math.Abs(srcPtr[(lineOffset) * (  y  ) + nChan * (x - 1) + component] * 3 +
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] * 3 +
                                                  srcPtr[(lineOffset) * (y - 1) + nChan * (x - 1) + component] -
-                                              
-                                                 srcPtr[(lineOffset) * (  y  ) + nChan * (x + 1) + component] * 3 -
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component] * 3 -
                                                  srcPtr[(lineOffset) * (y - 1) + nChan * (x + 1) + component]
                                              )
-                                      + Math.Abs(srcPtr[(lineOffset) * (  y  ) + nChan * (x - 1) + component] +
-                                                 srcPtr[(lineOffset) * (  y  ) + nChan * (  x  ) + component] * 2 +
-                                                 srcPtr[(lineOffset) * (  y  ) + nChan * (x + 1) + component] -
-                                              
+                                      + Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] +
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 2 +
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component] -
+
                                                  srcPtr[(lineOffset) * (y - 1) + nChan * (x - 1) + component] -
-                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (  x  ) + component] * 2 -
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] * 2 -
                                                  srcPtr[(lineOffset) * (y - 1) + nChan * (x + 1) + component]
                                              );
                                 }
-                            } else if (x == 0) {
-                                s = Math.Abs(srcPtr[(lineOffset) * (y - 1) + nChan * (  x  ) + component] +
-                                             srcPtr[(lineOffset) * (  y  ) + nChan * (  x  ) + component] * 2 +
-                                             srcPtr[(lineOffset) * (y + 1) + nChan * (  x  ) + component] -
+                            }
+                            else if (x == 0)
+                            {
+                                s = Math.Abs(srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] +
+                                             srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 2 +
+                                             srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component] -
 
                                              srcPtr[(lineOffset) * (y - 1) + nChan * (x + 1) + component] -
-                                             srcPtr[(lineOffset) * (  y  ) + nChan * (x + 1) + component] * 2 -
+                                             srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component] * 2 -
                                              srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component]
                                              )
-                                  + Math.Abs(srcPtr[(lineOffset) * (y + 1) + nChan * (  x  ) + component] * 3 +
+                                  + Math.Abs(srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component] * 3 +
                                              srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component] -
 
-                                             srcPtr[(lineOffset) * (y - 1) + nChan * (  x  ) + component] * 3 -
+                                             srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] * 3 -
                                              srcPtr[(lineOffset) * (y - 1) + nChan * (x + 1) + component]
                                              );
-                            } else {
+                            }
+                            else
+                            {
                                 s = Math.Abs(srcPtr[(lineOffset) * (y - 1) + nChan * (x - 1) + component] +
-                                             srcPtr[(lineOffset) * (  y  ) + nChan * (x - 1) + component] * 2 +
+                                             srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] * 2 +
                                              srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] -
 
-                                             srcPtr[(lineOffset) * (y - 1) + nChan * (  x  ) + component] -
-                                             srcPtr[(lineOffset) * (  y  ) + nChan * (  x  ) + component] * 2 -
-                                             srcPtr[(lineOffset) * (y + 1) + nChan * (  x  ) + component]
+                                             srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] -
+                                             srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 2 -
+                                             srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component]
                                              )
                                   + Math.Abs(srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] +
-                                             srcPtr[(lineOffset) * (y + 1) + nChan * (  x  ) + component] * 3 -
+                                             srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component] * 3 -
 
                                              srcPtr[(lineOffset) * (y - 1) + nChan * (x - 1) + component] -
-                                             srcPtr[(lineOffset) * (y - 1) + nChan * (  x  ) + component] * 3
+                                             srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] * 3
                                              );
                             }
-                            
-                            
+
+
                             *(dataPtr++) = (byte)s;
                         }
                     }
@@ -623,7 +641,8 @@ namespace SS_OpenCV
         /// 3D Median filter 3x3
         /// </summary>
         /// <param name="img">image</param>
-        internal static void Median3x3(Image<Bgr, byte>img) {
+        internal static void Median3x3(Image<Bgr, byte> img)
+        {
             Image<Bgr, byte> source = img.Clone();
             unsafe
             {
@@ -639,15 +658,16 @@ namespace SS_OpenCV
                 int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
                 int lineOffset = nChan * width + padding;
                 int x, y;
-                byte [,,] mat = new byte[3,3,3];
+                byte[,,] mat = new byte[3, 3, 3];
                 for (y = 0; y < height; y++)
                 {
                     for (x = 0; x < width; x++)
                     {
                         for (int i = 0; i < 3; i++)
-                            for (int j = 0; j < 3; j++) {
-                                int srcX = x + i-1, 
-                                    srcY = y + j-1;
+                            for (int j = 0; j < 3; j++)
+                            {
+                                int srcX = x + i - 1,
+                                    srcY = y + j - 1;
                                 if (srcX >= width) srcX = width - 1;
                                 else if (srcX < 0) srcX = 0;
                                 if (srcY >= height) srcY = height - 1;
@@ -659,20 +679,23 @@ namespace SS_OpenCV
                                 mat[i, j, 2] = p[2];
                             }
                         int bestDistance = int.MaxValue;
-                        int bestX=0, bestY=0;
-                        for (int i=0; i<3; i++) for (int j=0; j<3; j++) {
+                        int bestX = 0, bestY = 0;
+                        for (int i = 0; i < 3; i++) for (int j = 0; j < 3; j++)
+                            {
                                 int sum = 0;
-                                for (int ni = 0; ni < 3; ni++) for (int nj = 0; nj < 3; nj++) 
-                                        if (i != ni && j != nj) {
-                                            sum += Math.Abs(mat[i,j,0]-mat[ni,nj,0]) +
-                                                Math.Abs(mat[i, j, 1] - mat[ni, nj, 1]) + 
+                                for (int ni = 0; ni < 3; ni++) for (int nj = 0; nj < 3; nj++)
+                                        if (i != ni && j != nj)
+                                        {
+                                            sum += Math.Abs(mat[i, j, 0] - mat[ni, nj, 0]) +
+                                                Math.Abs(mat[i, j, 1] - mat[ni, nj, 1]) +
                                                 Math.Abs(mat[i, j, 2] - mat[ni, nj, 2]);
                                         }
-                                if (bestDistance > sum) {
+                                if (bestDistance > sum)
+                                {
                                     bestDistance = sum;
                                     bestX = i; bestY = j;
                                 }
-                        }
+                            }
 
                         dataPtr[0] = mat[bestX, bestY, 0];
                         dataPtr[1] = mat[bestX, bestY, 1];
@@ -687,16 +710,20 @@ namespace SS_OpenCV
             }
         }
 
-        public class Histogram {
+        public class Histogram
+        {
             public int[] Red;
             public int[] Green;
             public int[] Blue;
+            public int[] BW;
             public int levels;
-            public Histogram(int kn) {
+            public Histogram(int kn)
+            {
                 levels = kn;
                 Red = new int[kn];
                 Green = new int[kn];
                 Blue = new int[kn];
+                BW = new int[kn];
             }
         }
 
@@ -720,7 +747,8 @@ namespace SS_OpenCV
                         h.Blue[dataPtr[0]]++;
                         h.Green[dataPtr[1]]++;
                         h.Red[dataPtr[2]]++;
-
+                        int w = ((dataPtr[0] + dataPtr[1] + dataPtr[2]) / 3);
+                        h.BW[(byte)(w)]++;
                         dataPtr += nChan;
                     }
                     //at the end of the line advance the pointer by the aligment bytes (padding)
@@ -732,5 +760,64 @@ namespace SS_OpenCV
         }
 
 
+        internal static void Binarization(Image<Bgr, byte> img, int threshold)
+        {
+            unsafe
+            {
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int x, y;
+                for (y = 0; y < height; y++)
+                {
+                    for (x = 0; x < width; x++)
+                    {
+                        
+                        int w = ((dataPtr[0] + dataPtr[1] + dataPtr[2]) / 3);
+                        if (w > threshold)
+                        { dataPtr[0] = 0xFF; dataPtr[1] = 0xFF; dataPtr[2] = 0xFF; }
+                        else
+                        { dataPtr[0] = 0x00; dataPtr[1] = 0x00; dataPtr[2] = 0x00; }
+
+                        dataPtr += nChan;
+                    }
+                    //at the end of the line advance the pointer by the aligment bytes (padding)
+                    dataPtr += padding;
+                }
+            }
+        }
+
+        internal static void OtsuBinarization(Image<Bgr, byte> img)
+        {
+            int bestT = 0;
+            double o2max = 0;
+
+            //TODO: betterize
+            Histogram h = ImageHistogram(img);
+            double nPixels = img.Height * img.Width;
+            for (int t = 0; t <= 255; t++) {
+                double q1 = 0.0; for (int i = 0; i < t; i++) q1 += h.BW[i] / nPixels;
+                double q2 = 1 - q1;
+
+                double u1 = 0.0; for (int i = 0; i < t; i++) u1 += i * h.BW[i] / nPixels; u1 /= q1;
+                double u2 = 0.0; for (int i = t+1; i <= 255; i++) u2 += i * h.BW[i] / nPixels; u2 /= q2;
+
+                /* Complete OTSU (is shit) * /
+                double o21 = 0.0; for (int i = 0; i < t; i++) o21 += Math.Pow(u1 - i, 2) * h.BW[i]/nPixels; o21 /= t;
+                double o22 = 0.0; for (int i = t + 1; i <= 255; i++) o22 += Math.Pow(u2 - i, 2) * h.BW[i] / nPixels; o22 /= 255-t;
+                double o2w = q1 * o21 + q2 * o22;
+                /*/
+                double o2w = q1 * q2 * Math.Pow(u1 - u2, 2);
+                /**/
+                //Console.WriteLine("------->{0} -- {1}; {2}; {3}; {4} --- {5}", t, q1, q2, u1, u2, o2w);
+                if (o2w > o2max) { bestT = t;  o2max = o2w; }
+            }
+            Console.WriteLine("------->{0}", bestT);
+            Binarization(img, bestT);
+        }
     }
 }

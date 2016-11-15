@@ -357,5 +357,26 @@ namespace SS_OpenCV
 
             Cursor = Cursors.Default; // normal cursor 
         }
+
+        private void binarizeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (img == null) // verify if the image is already opened
+                return;
+
+            //show dialog
+
+            Cursor = Cursors.WaitCursor; // clock cursor 
+
+            //copy Undo Image
+            imgUndo = img.Copy();
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            ImageClass.OtsuBinarization(img);
+            watch.Stop();
+            Console.WriteLine("---> {0} ms ", watch.ElapsedMilliseconds);
+            ImageViewer.Image = img.Bitmap;
+            ImageViewer.Refresh(); // refresh image on the screen
+
+            Cursor = Cursors.Default; // normal cursor 
+        }
     }
 }

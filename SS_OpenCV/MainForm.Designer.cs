@@ -61,10 +61,11 @@
             this.robertsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.medianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoZoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.histogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.ImageViewer = new System.Windows.Forms.PictureBox();
-            this.histogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.binarizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ImageViewer)).BeginInit();
@@ -146,7 +147,8 @@
             this.transformsToolStripMenuItem,
             this.filtersToolStripMenuItem,
             this.autoZoomToolStripMenuItem,
-            this.histogramToolStripMenuItem});
+            this.histogramToolStripMenuItem,
+            this.binarizeToolStripMenuItem});
             this.imageToolStripMenuItem.Name = "imageToolStripMenuItem";
             this.imageToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
             this.imageToolStripMenuItem.Text = "Image";
@@ -323,6 +325,13 @@
             this.autoZoomToolStripMenuItem.Text = "Auto Zoom";
             this.autoZoomToolStripMenuItem.Click += new System.EventHandler(this.autoZoomToolStripMenuItem_Click);
             // 
+            // histogramToolStripMenuItem
+            // 
+            this.histogramToolStripMenuItem.Name = "histogramToolStripMenuItem";
+            this.histogramToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.histogramToolStripMenuItem.Text = "Histogram";
+            this.histogramToolStripMenuItem.Click += new System.EventHandler(this.histogramToolStripMenuItem_Click);
+            // 
             // autoresToolStripMenuItem
             // 
             this.autoresToolStripMenuItem.Name = "autoresToolStripMenuItem";
@@ -349,12 +358,12 @@
             this.ImageViewer.TabIndex = 6;
             this.ImageViewer.TabStop = false;
             // 
-            // histogramToolStripMenuItem
+            // binarizeToolStripMenuItem
             // 
-            this.histogramToolStripMenuItem.Name = "histogramToolStripMenuItem";
-            this.histogramToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.histogramToolStripMenuItem.Text = "Histogram";
-            this.histogramToolStripMenuItem.Click += new System.EventHandler(this.histogramToolStripMenuItem_Click);
+            this.binarizeToolStripMenuItem.Name = "binarizeToolStripMenuItem";
+            this.binarizeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.binarizeToolStripMenuItem.Text = "Binarize";
+            this.binarizeToolStripMenuItem.Click += new System.EventHandler(this.binarizeToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -415,6 +424,7 @@
         private System.Windows.Forms.ToolStripMenuItem robertsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem medianToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem histogramToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem binarizeToolStripMenuItem;
     }
 }
 

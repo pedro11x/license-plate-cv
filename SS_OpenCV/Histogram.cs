@@ -32,10 +32,16 @@ namespace SS_OpenCV
             chart.Series["Blue"].Color = Color.Blue;
             chart.Series["Blue"].ChartType = SeriesChartType.Line;
 
+            chart.Series.Add("BW");
+            DataPointCollection bw = chart.Series["BW"].Points;
+            chart.Series["BW"].Color = Color.Black;
+            chart.Series["BW"].ChartType = SeriesChartType.Line;
+
             for (int i = 0; i<h.levels; i++) {
                 red.AddXY(i, h.Red[i]);
                 green.AddXY(i, h.Green[i]);
                 blue.AddXY(i, h.Blue[i]);
+                bw.AddXY(i, h.BW[i]);
             }
 
             chart.ChartAreas[0].AxisX.Maximum = h.levels - 1;

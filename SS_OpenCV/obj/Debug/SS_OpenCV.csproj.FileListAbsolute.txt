@@ -90,3 +90,15 @@ C:\Users\Pedro\Desktop\SS\P\SS_OpenCV_1.95_2016_09_16\SS_OpenCV\SS_OpenCV\obj\De
 C:\Users\Pedro\Desktop\SS\P\SS_OpenCV_1.95_2016_09_16\SS_OpenCV\SS_OpenCV\obj\Debug\SS_OpenCV.Properties.Resources.resources
 C:\Users\Pedro\Desktop\SS\P\SS_OpenCV_1.95_2016_09_16\SS_OpenCV\SS_OpenCV\obj\Debug\SS_OpenCV.csproj.GenerateResource.Cache
 C:\Users\Pedro\Desktop\SS\P\SS_OpenCV_1.95_2016_09_16\SS_OpenCV\SS_OpenCV\obj\Debug\SS_OpenCV.Histogram.resources
+C:\Users\Pedro\Documents\license-plate-cv\SS_OpenCV\bin\Debug\SS_OpenCV.exe.config
+C:\Users\Pedro\Documents\license-plate-cv\SS_OpenCV\obj\Debug\SS_OpenCV.exe
+C:\Users\Pedro\Documents\license-plate-cv\SS_OpenCV\obj\Debug\SS_OpenCV.pdb
+C:\Users\Pedro\Documents\license-plate-cv\SS_OpenCV\bin\Debug\SS_OpenCV.exe
+C:\Users\Pedro\Documents\license-plate-cv\SS_OpenCV\bin\Debug\SS_OpenCV.pdb
+C:\Users\Pedro\Documents\license-plate-cv\SS_OpenCV\obj\Debug\SS_OpenCV.csprojResolveAssemblyReference.cache
+C:\Users\Pedro\Documents\license-plate-cv\SS_OpenCV\obj\Debug\SS_OpenCV.AuthorsForm.resources
+C:\Users\Pedro\Documents\license-plate-cv\SS_OpenCV\obj\Debug\SS_OpenCV.Histogram.resources
+C:\Users\Pedro\Documents\license-plate-cv\SS_OpenCV\obj\Debug\SS_OpenCV.InputBox.resources
+C:\Users\Pedro\Documents\license-plate-cv\SS_OpenCV\obj\Debug\SS_OpenCV.MainForm.resources
+C:\Users\Pedro\Documents\license-plate-cv\SS_OpenCV\obj\Debug\SS_OpenCV.Properties.Resources.resources
+C:\Users\Pedro\Documents\license-plate-cv\SS_OpenCV\obj\Debug\SS_OpenCV.csproj.GenerateResource.Cache
