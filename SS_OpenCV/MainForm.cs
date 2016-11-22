@@ -14,7 +14,8 @@ namespace SS_OpenCV
     public partial class MainForm : Form
     {
         Image<Bgr, Byte> img = null; // working image
-        Image<Bgr, Byte> imgUndo = null; // undo backup image - UNDO
+        //Image<Bgr, Byte> imgUndo = null; // undo backup image - UNDO
+        Stack<Image<Bgr, Byte>> history = new Stack<Image<Bgr, byte>>();
         string title_bak = "";
 
         public MainForm()
@@ -32,13 +33,13 @@ namespace SS_OpenCV
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                if(img!=null) history.Push(img.Copy());
                 img = new Image<Bgr, byte>(openFileDialog1.FileName);
                 Text = title_bak + " [" +
                         openFileDialog1.FileName.Substring(openFileDialog1.FileName.LastIndexOf("\\") + 1) +
                         "]";
-                imgUndo = img.Copy();
-                ImageViewer.Image = img.Bitmap;
-                ImageViewer.Refresh();
+                refresh();
+                
             }
         }
 
@@ -65,6 +66,22 @@ namespace SS_OpenCV
             Close();
         }
 
+        private void refresh() {
+            ImageViewer.Image = img.Bitmap;
+            ImageViewer.Refresh(); // refresh image on the screen
+        }
+
+        private void undo() {
+            try
+            {
+                Image<Bgr, Byte> oimg = history.Pop();
+                img = oimg;
+                ImageViewer.Image = oimg.Bitmap;
+                ImageViewer.Refresh(); // refresh image on the screen
+            }
+            catch { }
+        }
+
         /// <summary>
         /// restore last undo copy of the working image
         /// </summary>
@@ -72,15 +89,7 @@ namespace SS_OpenCV
         /// <param name="e"></param>
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (imgUndo == null) // verify if the image is already opened
-                return; 
-            Cursor = Cursors.WaitCursor;
-            img = imgUndo.Copy();
-
-            ImageViewer.Image = img.Bitmap;
-            ImageViewer.Refresh(); // refresh image on the screen
-
-            Cursor = Cursors.Default; // normal cursor 
+            undo();
         }
 
         /// <summary>
@@ -126,13 +135,11 @@ namespace SS_OpenCV
                 return;
             Cursor = Cursors.WaitCursor; // clock cursor 
 
-            //copy Undo Image
-            imgUndo = img.Copy();
+            history.Push(img.Copy());
 
             ImageClass.ConvertToGray(img);
 
-            ImageViewer.Image = img.Bitmap;
-            ImageViewer.Refresh(); // refresh image on the screen
+            refresh();
 
             Cursor = Cursors.Default; // normal cursor 
         }
@@ -150,14 +157,12 @@ namespace SS_OpenCV
                 return;
             Cursor = Cursors.WaitCursor; // clock cursor 
 
-            //copy Undo Image
-            imgUndo = img.Copy();
+            history.Push(img.Copy());
 
             //ImageClass.Negative(img);
             ImageClass.DNegative(img);
 
-            ImageViewer.Image = img.Bitmap;
-            ImageViewer.Refresh(); // refresh image on the screen
+            refresh();
 
             Cursor = Cursors.Default; // normal cursor 
         }
@@ -168,13 +173,11 @@ namespace SS_OpenCV
                 return;
             Cursor = Cursors.WaitCursor; // clock cursor 
 
-            //copy Undo Image
-            imgUndo = img.Copy();
+            history.Push(img.Copy());
 
             ImageClass.ConvertToGray(img);
 
-            ImageViewer.Image = img.Bitmap;
-            ImageViewer.Refresh(); // refresh image on the screen
+            refresh();
 
             Cursor = Cursors.Default; // normal cursor 
         }
@@ -185,13 +188,11 @@ namespace SS_OpenCV
                 return;
             Cursor = Cursors.WaitCursor; // clock cursor 
 
-            //copy Undo Image
-            imgUndo = img.Copy();
+            history.Push(img.Copy());
 
             ImageClass.FilterComponent(img, ImageClass.Component.RED);
 
-            ImageViewer.Image = img.Bitmap;
-            ImageViewer.Refresh(); // refresh image on the screen
+            refresh();
 
             Cursor = Cursors.Default; // normal cursor 
         }
@@ -202,14 +203,11 @@ namespace SS_OpenCV
                 return;
             Cursor = Cursors.WaitCursor; // clock cursor 
 
-            //copy Undo Image
-            imgUndo = img.Copy();
+            history.Push(img.Copy());
 
             ImageClass.FilterComponent(img, ImageClass.Component.GREEN);
 
-            ImageViewer.Image = img.Bitmap;
-            ImageViewer.Refresh(); // refresh image on the screen
-
+            refresh();
             Cursor = Cursors.Default; // normal cursor 
         }
 
@@ -219,13 +217,11 @@ namespace SS_OpenCV
                 return;
             Cursor = Cursors.WaitCursor; // clock cursor 
 
-            //copy Undo Image
-            imgUndo = img.Copy();
+            history.Push(img.Copy());
 
             ImageClass.FilterComponent(img, ImageClass.Component.BLUE);
 
-            ImageViewer.Image = img.Bitmap;
-            ImageViewer.Refresh(); // refresh image on the screen
+            refresh();
 
             Cursor = Cursors.Default; // normal cursor 
         }
@@ -239,13 +235,11 @@ namespace SS_OpenCV
             
             Cursor = Cursors.WaitCursor; // clock cursor 
 
-            //copy Undo Image
-            imgUndo = img.Copy();
+            history.Push(img.Copy());
 
             ImageClass.Translate(img, -30, -30);
 
-            ImageViewer.Image = img.Bitmap;
-            ImageViewer.Refresh(); // refresh image on the screen
+            refresh();
 
             Cursor = Cursors.Default; // normal cursor 
         }
@@ -264,14 +258,14 @@ namespace SS_OpenCV
             var watch = System.Diagnostics.Stopwatch.StartNew();
             Cursor = Cursors.WaitCursor; // clock cursor 
 
-            //copy Undo Image
-            imgUndo = img.Copy();
+            history.Push(img.Copy());
 
             ImageClass.Avg(img,3);
+
             watch.Stop();
             Console.WriteLine("---> %d ms ", watch.ElapsedMilliseconds);
-            ImageViewer.Image = img.Bitmap;
-            ImageViewer.Refresh(); // refresh image on the screen
+
+            refresh();
 
             Cursor = Cursors.Default; // normal cursor 
         }
@@ -285,13 +279,11 @@ namespace SS_OpenCV
 
             Cursor = Cursors.WaitCursor; // clock cursor 
 
-            //copy Undo Image
-            imgUndo = img.Copy();
+            history.Push(img.Copy());
 
             ImageClass.EdgeDetectionRoberts(img);
 
-            ImageViewer.Image = img.Bitmap;
-            ImageViewer.Refresh(); // refresh image on the screen
+            refresh();
 
             Cursor = Cursors.Default; // normal cursor 
         }
@@ -305,13 +297,11 @@ namespace SS_OpenCV
 
             Cursor = Cursors.WaitCursor; // clock cursor 
 
-            //copy Undo Image
-            imgUndo = img.Copy();
+            history.Push(img.Copy());
 
             ImageClass.EdgeDetectionSobel3x3(img);
 
-            ImageViewer.Image = img.Bitmap;
-            ImageViewer.Refresh(); // refresh image on the screen
+            refresh();
 
             Cursor = Cursors.Default; // normal cursor 
         }
@@ -325,14 +315,15 @@ namespace SS_OpenCV
 
             Cursor = Cursors.WaitCursor; // clock cursor 
 
-            //copy Undo Image
-            imgUndo = img.Copy();
+            history.Push(img.Copy());
+
             var watch = System.Diagnostics.Stopwatch.StartNew();
             ImageClass.Median3x3(img);
+
             watch.Stop();
             Console.WriteLine("---> {0} ms ", watch.ElapsedMilliseconds);
-            ImageViewer.Image = img.Bitmap;
-            ImageViewer.Refresh(); // refresh image on the screen
+
+            refresh();
 
             Cursor = Cursors.Default; // normal cursor 
         }
@@ -346,8 +337,7 @@ namespace SS_OpenCV
 
             Cursor = Cursors.WaitCursor; // clock cursor 
 
-            //copy Undo Image
-            imgUndo = img.Copy();
+
             var watch = System.Diagnostics.Stopwatch.StartNew();
             ImageClass.Histogram h = ImageClass.ImageHistogram(img);
             watch.Stop();
@@ -367,16 +357,35 @@ namespace SS_OpenCV
 
             Cursor = Cursors.WaitCursor; // clock cursor 
 
-            //copy Undo Image
-            imgUndo = img.Copy();
+            history.Push(img.Copy());
+
             var watch = System.Diagnostics.Stopwatch.StartNew();
+
             ImageClass.OtsuBinarization(img);
+
             watch.Stop();
             Console.WriteLine("---> {0} ms ", watch.ElapsedMilliseconds);
-            ImageViewer.Image = img.Bitmap;
-            ImageViewer.Refresh(); // refresh image on the screen
+
+            refresh();
 
             Cursor = Cursors.Default; // normal cursor 
         }
+
+
+
+
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Control | Keys.Z))
+            {
+                undo();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
     }
+
+
+
 }
