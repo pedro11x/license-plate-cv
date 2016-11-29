@@ -625,7 +625,7 @@ namespace SS_OpenCV
                                              );
                             }
 
-
+                            if (s > 255) s = 255; else if (s < 0) s = 0;
                             *(dataPtr++) = (byte)s;
                         }
                     }
@@ -816,8 +816,385 @@ namespace SS_OpenCV
                 //Console.WriteLine("------->{0} -- {1}; {2}; {3}; {4} --- {5}", t, q1, q2, u1, u2, o2w);
                 if (o2w > o2max) { bestT = t;  o2max = o2w; }
             }
-            Console.WriteLine("------->{0}", bestT);
+            //Console.WriteLine("------->{0}", bestT);
             Binarization(img, bestT);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /// <summary>
+        /// Sobel Edge detection filter 3 x 3
+        /// </summary>
+        /// <param name="img">image</param>
+        internal static void EdgeDetectionSobel3x3X(Image<Bgr, byte> img)
+        {
+            Image<Bgr, byte> source = img.Clone();
+            unsafe
+            {
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+
+                byte* srcPtr = (byte*)source.MIplImage.imageData.ToPointer(); // Pointer to the original image
+
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int lineOffset = nChan * width + padding;
+                int x, y;
+
+                for (y = 0; y < height; y++)
+                {
+                    for (x = 0; x < width; x++)
+                    {
+                        for (int component = 0; component < nChan; component++)
+                        {
+                            int s = 0;
+                            ///Normal case (not on border)
+                            if (y < (height - 1) && x < (width - 1) && x > 0 && y > 0)
+                            {
+                                s = Math.Abs(srcPtr[(lineOffset) * (y - 1) + nChan * (x - 1) + component] +
+                                             srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] * 2 +
+                                             srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] -
+
+                                             srcPtr[(lineOffset) * (y - 1) + nChan * (x + 1) + component] -
+                                             srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component] * 2 -
+                                             srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component]
+                                             );
+                                  
+                            }
+                            else if (y == 0)
+                            {///Top border
+                                if (x == 0)
+                                {
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 3 +
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component] -
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component] * 3 -
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component]
+                                             );
+                                      
+                                }
+                                else if (x == (width - 1))
+                                {
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] * 3 +
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] -
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 3 -
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component]
+                                             );
+                                }
+                                else
+                                {
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] * 3 +
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] -
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component] * 3 -
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component]
+                                             );
+                                }
+                            }
+                            else if (y == (height - 1))
+                            {
+                                if (x == 0)
+                                {
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 3 +
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] -
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component] * 3 -
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x + 1) + component]
+                                             );
+                                }
+                                else if (x == (width - 1))
+                                {
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] * 3 +
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x - 1) + component] -
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 3 -
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component]
+                                             );
+                                }
+                                else
+                                {
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] * 3 +
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x - 1) + component] -
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component] * 3 -
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x + 1) + component]
+                                             );
+                                }
+                            }
+                            else if (x == 0)
+                            {
+                                s = Math.Abs(srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] +
+                                             srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 2 +
+                                             srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component] -
+
+                                             srcPtr[(lineOffset) * (y - 1) + nChan * (x + 1) + component] -
+                                             srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component] * 2 -
+                                             srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component]
+                                             );
+                            }
+                            else
+                            {
+                                s = Math.Abs(srcPtr[(lineOffset) * (y - 1) + nChan * (x - 1) + component] +
+                                             srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] * 2 +
+                                             srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] -
+
+                                             srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] -
+                                             srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 2 -
+                                             srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component]
+                                             );
+                            }
+
+                            if (s > 255) s = 255; else if (s < 0) s = 0;
+                            *(dataPtr++) = (byte)s;
+                        }
+                    }
+                    //at the end of the line advance the pointer by the aligment bytes (padding)
+                    dataPtr += padding;
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Sobel Edge detection filter 3 x 3
+        /// </summary>
+        /// <param name="img">image</param>
+        internal static void EdgeDetectionSobel3x3Y(Image<Bgr, byte> img)
+        {
+            Image<Bgr, byte> source = img.Clone();
+            unsafe
+            {
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+
+                byte* srcPtr = (byte*)source.MIplImage.imageData.ToPointer(); // Pointer to the original image
+
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int lineOffset = nChan * width + padding;
+                int x, y;
+
+                for (y = 0; y < height; y++)
+                {
+                    for (x = 0; x < width; x++)
+                    {
+                        for (int component = 0; component < nChan; component++)
+                        {
+                            int s = 0;
+                            ///Normal case (not on border)
+                            if (y < (height - 1) && x < (width - 1) && x > 0 && y > 0)
+                            {
+                                s = Math.Abs(srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] +
+                                             srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component] * 2 +
+                                             srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component] -
+
+                                             srcPtr[(lineOffset) * (y - 1) + nChan * (x - 1) + component] -
+                                             srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] * 2 -
+                                             srcPtr[(lineOffset) * (y - 1) + nChan * (x + 1) + component]
+                                             );
+                            }
+                            else if (y == 0)
+                            {///Top border
+                                if (x == 0)
+                                {
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component] * 3 +
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component] -
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 3 -
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component]
+                                             );
+                                }
+                                else if (x == (width - 1))
+                                {
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] +
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component] * 3 -
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] -
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 3
+                                             );
+                                }
+                                else
+                                {
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] +
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component] * 2 +
+                                                 srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component] -
+
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] -
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 2 -
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component]
+                                             );
+                                }
+                            }
+                            else if (y == (height - 1))
+                            {
+                                if (x == 0)
+                                {
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 3 +
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component] -
+
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] * 3 -
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x + 1) + component]
+                                             );
+                                }
+                                else if (x == (width - 1))
+                                {
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] +
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 3 -
+
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x - 1) + component] -
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] * 3
+                                             );
+                                }
+                                else
+                                {
+                                    s = Math.Abs(srcPtr[(lineOffset) * (y) + nChan * (x - 1) + component] +
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x) + component] * 2 +
+                                                 srcPtr[(lineOffset) * (y) + nChan * (x + 1) + component] -
+
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x - 1) + component] -
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] * 2 -
+                                                 srcPtr[(lineOffset) * (y - 1) + nChan * (x + 1) + component]
+                                             );
+                                }
+                            }
+                            else if (x == 0)
+                            {
+                                s = Math.Abs(srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component] * 3 +
+                                             srcPtr[(lineOffset) * (y + 1) + nChan * (x + 1) + component] -
+
+                                             srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] * 3 -
+                                             srcPtr[(lineOffset) * (y - 1) + nChan * (x + 1) + component]
+                                             );
+                            }
+                            else
+                            {
+                                s = Math.Abs(srcPtr[(lineOffset) * (y + 1) + nChan * (x - 1) + component] +
+                                             srcPtr[(lineOffset) * (y + 1) + nChan * (x) + component] * 3 -
+
+                                             srcPtr[(lineOffset) * (y - 1) + nChan * (x - 1) + component] -
+                                             srcPtr[(lineOffset) * (y - 1) + nChan * (x) + component] * 3
+                                             );
+                            }
+
+                            if (s > 255) s = 255; else if (s < 0) s = 0;
+                            *(dataPtr++) = (byte)s;
+                        }
+                    }
+                    //at the end of the line advance the pointer by the aligment bytes (padding)
+                    dataPtr += padding;
+                }
+            }
+
+        }
+
+        public class Projection { public int[] values; public int peak; public Projection(int[] v, int p) { values = v; peak = p; } }
+
+        /// <summary>
+        /// HorizontalProjection
+        /// Image must be binary
+        /// </summary>
+        /// <param name="img">image</param>
+        internal static Projection VProjection(Image<Bgr, byte> img)
+        {
+            int[] v;
+            int peak = 0;
+
+            Image<Bgr, byte> source = img.Clone();
+            unsafe
+            {
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+
+                int width = img.Width;
+                int height = img.Height;
+
+                v = new int[height];
+
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int lineOffset = nChan * width + padding;
+                int x, y;
+
+                for (y = 0; y < height; y++)
+                {
+                    for (x = 0; x < width; x++)
+                    {
+                        if (dataPtr[0] > 128) {
+                            if (++v[y] > peak) peak = v[y];
+                        }
+
+                        dataPtr += nChan;
+                    }
+                    //at the end of the line advance the pointer by the aligment bytes (padding)
+                    dataPtr += padding;
+                }
+            }
+            return new Projection(v, peak);
+        }
+
+
+
+
+        /// <summary>
+        /// HorizontalProjection
+        /// Image must be binary
+        /// </summary>
+        /// <param name="img">image</param>
+        internal static Projection HProjection(Image<Bgr, byte> img)
+        {
+            int[] v;
+            int peak = 0;
+
+            Image<Bgr, byte> source = img.Clone();
+            unsafe
+            {
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+
+                int width = img.Width;
+                int height = img.Height;
+
+                v = new int[width];
+
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int lineOffset = nChan * width + padding;
+                int x, y;
+
+                for (y = 0; y < height; y++)
+                {
+                    for (x = 0; x < width; x++)
+                    {
+                        if (dataPtr[0] > 128)
+                        {
+                            if(++v[x]>peak) peak=v[x];
+                        }
+
+                        dataPtr += nChan;
+                    }
+                    //at the end of the line advance the pointer by the aligment bytes (padding)
+                    dataPtr += padding;
+                }
+            }
+            return new Projection(v, peak);
         }
     }
 }

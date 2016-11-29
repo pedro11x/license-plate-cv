@@ -42,7 +42,6 @@
             this.colorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.convertToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.grayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bWToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.negativeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.colorToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,13 +58,20 @@
             this.edgeDetectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sobelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.robertsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sobelXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sobelYToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.medianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoZoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.histogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.binarizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showProjectionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.goToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.ImageViewer = new System.Windows.Forms.PictureBox();
-            this.binarizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.testsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lPHRegionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lPVRegionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ImageViewer)).BeginInit();
@@ -148,7 +154,10 @@
             this.filtersToolStripMenuItem,
             this.autoZoomToolStripMenuItem,
             this.histogramToolStripMenuItem,
-            this.binarizeToolStripMenuItem});
+            this.binarizeToolStripMenuItem,
+            this.showProjectionsToolStripMenuItem,
+            this.goToolStripMenuItem,
+            this.testsToolStripMenuItem});
             this.imageToolStripMenuItem.Name = "imageToolStripMenuItem";
             this.imageToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
             this.imageToolStripMenuItem.Text = "Image";
@@ -161,14 +170,13 @@
             this.negativeToolStripMenuItem,
             this.filterToolStripMenuItem});
             this.colorToolStripMenuItem.Name = "colorToolStripMenuItem";
-            this.colorToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.colorToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.colorToolStripMenuItem.Text = "Color";
             // 
             // convertToToolStripMenuItem
             // 
             this.convertToToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.grayToolStripMenuItem,
-            this.bWToolStripMenuItem});
+            this.grayToolStripMenuItem});
             this.convertToToolStripMenuItem.Name = "convertToToolStripMenuItem";
             this.convertToToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
             this.convertToToolStripMenuItem.Text = "Convert To";
@@ -179,13 +187,6 @@
             this.grayToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.grayToolStripMenuItem.Text = "Gray";
             this.grayToolStripMenuItem.Click += new System.EventHandler(this.grayToolStripMenuItem_Click);
-            // 
-            // bWToolStripMenuItem
-            // 
-            this.bWToolStripMenuItem.Name = "bWToolStripMenuItem";
-            this.bWToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
-            this.bWToolStripMenuItem.Text = "B&W";
-            this.bWToolStripMenuItem.Click += new System.EventHandler(this.bWToolStripMenuItem_Click);
             // 
             // negativeToolStripMenuItem
             // 
@@ -240,7 +241,7 @@
             this.rotationToolStripMenuItem,
             this.zoomToolStripMenuItem});
             this.transformsToolStripMenuItem.Name = "transformsToolStripMenuItem";
-            this.transformsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.transformsToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.transformsToolStripMenuItem.Text = "Transforms";
             // 
             // translationToolStripMenuItem
@@ -269,7 +270,7 @@
             this.edgeDetectionToolStripMenuItem,
             this.medianToolStripMenuItem});
             this.filtersToolStripMenuItem.Name = "filtersToolStripMenuItem";
-            this.filtersToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.filtersToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.filtersToolStripMenuItem.Text = "Filters";
             // 
             // averageToolStripMenuItem
@@ -291,7 +292,9 @@
             // 
             this.edgeDetectionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.sobelToolStripMenuItem,
-            this.robertsToolStripMenuItem});
+            this.robertsToolStripMenuItem,
+            this.sobelXToolStripMenuItem,
+            this.sobelYToolStripMenuItem});
             this.edgeDetectionToolStripMenuItem.Name = "edgeDetectionToolStripMenuItem";
             this.edgeDetectionToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.edgeDetectionToolStripMenuItem.Text = "Edge Detection";
@@ -310,6 +313,20 @@
             this.robertsToolStripMenuItem.Text = "Roberts";
             this.robertsToolStripMenuItem.Click += new System.EventHandler(this.robertsToolStripMenuItem_Click);
             // 
+            // sobelXToolStripMenuItem
+            // 
+            this.sobelXToolStripMenuItem.Name = "sobelXToolStripMenuItem";
+            this.sobelXToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.sobelXToolStripMenuItem.Text = "SobelX";
+            this.sobelXToolStripMenuItem.Click += new System.EventHandler(this.sobelXToolStripMenuItem_Click);
+            // 
+            // sobelYToolStripMenuItem
+            // 
+            this.sobelYToolStripMenuItem.Name = "sobelYToolStripMenuItem";
+            this.sobelYToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.sobelYToolStripMenuItem.Text = "SobelY";
+            this.sobelYToolStripMenuItem.Click += new System.EventHandler(this.sobelYToolStripMenuItem_Click);
+            // 
             // medianToolStripMenuItem
             // 
             this.medianToolStripMenuItem.Name = "medianToolStripMenuItem";
@@ -321,16 +338,37 @@
             // 
             this.autoZoomToolStripMenuItem.CheckOnClick = true;
             this.autoZoomToolStripMenuItem.Name = "autoZoomToolStripMenuItem";
-            this.autoZoomToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.autoZoomToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.autoZoomToolStripMenuItem.Text = "Auto Zoom";
             this.autoZoomToolStripMenuItem.Click += new System.EventHandler(this.autoZoomToolStripMenuItem_Click);
             // 
             // histogramToolStripMenuItem
             // 
             this.histogramToolStripMenuItem.Name = "histogramToolStripMenuItem";
-            this.histogramToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.histogramToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.histogramToolStripMenuItem.Text = "Histogram";
             this.histogramToolStripMenuItem.Click += new System.EventHandler(this.histogramToolStripMenuItem_Click);
+            // 
+            // binarizeToolStripMenuItem
+            // 
+            this.binarizeToolStripMenuItem.Name = "binarizeToolStripMenuItem";
+            this.binarizeToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.binarizeToolStripMenuItem.Text = "Binarize";
+            this.binarizeToolStripMenuItem.Click += new System.EventHandler(this.binarizeToolStripMenuItem_Click);
+            // 
+            // showProjectionsToolStripMenuItem
+            // 
+            this.showProjectionsToolStripMenuItem.Name = "showProjectionsToolStripMenuItem";
+            this.showProjectionsToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.showProjectionsToolStripMenuItem.Text = "Show Projections";
+            this.showProjectionsToolStripMenuItem.Click += new System.EventHandler(this.showProjectionsToolStripMenuItem_Click);
+            // 
+            // goToolStripMenuItem
+            // 
+            this.goToolStripMenuItem.Name = "goToolStripMenuItem";
+            this.goToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.goToolStripMenuItem.Text = "Go";
+            this.goToolStripMenuItem.Click += new System.EventHandler(this.goToolStripMenuItem_Click);
             // 
             // autoresToolStripMenuItem
             // 
@@ -358,12 +396,28 @@
             this.ImageViewer.TabIndex = 6;
             this.ImageViewer.TabStop = false;
             // 
-            // binarizeToolStripMenuItem
+            // testsToolStripMenuItem
             // 
-            this.binarizeToolStripMenuItem.Name = "binarizeToolStripMenuItem";
-            this.binarizeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.binarizeToolStripMenuItem.Text = "Binarize";
-            this.binarizeToolStripMenuItem.Click += new System.EventHandler(this.binarizeToolStripMenuItem_Click);
+            this.testsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lPHRegionsToolStripMenuItem,
+            this.lPVRegionToolStripMenuItem});
+            this.testsToolStripMenuItem.Name = "testsToolStripMenuItem";
+            this.testsToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.testsToolStripMenuItem.Text = "Tests";
+            // 
+            // lPHRegionsToolStripMenuItem
+            // 
+            this.lPHRegionsToolStripMenuItem.Name = "lPHRegionsToolStripMenuItem";
+            this.lPHRegionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.lPHRegionsToolStripMenuItem.Text = "LPHRegions";
+            this.lPHRegionsToolStripMenuItem.Click += new System.EventHandler(this.lPHRegionsToolStripMenuItem_Click);
+            // 
+            // lPVRegionToolStripMenuItem
+            // 
+            this.lPVRegionToolStripMenuItem.Name = "lPVRegionToolStripMenuItem";
+            this.lPVRegionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.lPVRegionToolStripMenuItem.Text = "LPVRegion";
+            this.lPVRegionToolStripMenuItem.Click += new System.EventHandler(this.lPVRegionToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -375,6 +429,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "Sistemas Sensoriais 2016/2017 - Image processing";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
@@ -399,7 +454,6 @@
         private System.Windows.Forms.ToolStripMenuItem colorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem convertToToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem grayToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem bWToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem negativeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem transformsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem translationToolStripMenuItem;
@@ -425,6 +479,13 @@
         private System.Windows.Forms.ToolStripMenuItem medianToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem histogramToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem binarizeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sobelXToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sobelYToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showProjectionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem goToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem testsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem lPHRegionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem lPVRegionToolStripMenuItem;
     }
 }
 

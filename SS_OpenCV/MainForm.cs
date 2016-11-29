@@ -21,7 +21,7 @@ namespace SS_OpenCV
         public MainForm()
         {
             InitializeComponent();
-            title_bak = Text;
+            title_bak = Text;            
         }
 
         /// <summary>
@@ -82,6 +82,21 @@ namespace SS_OpenCV
             catch { }
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Control | Keys.Z))
+            {
+                undo();
+                return true;
+            }
+            if (keyData == (Keys.Control | Keys.D))
+            {
+                toggleZoom();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
         /// <summary>
         /// restore last undo copy of the working image
         /// </summary>
@@ -99,6 +114,10 @@ namespace SS_OpenCV
         /// <param name="e"></param>
         private void autoZoomToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            toggleZoom();  
+        }
+
+        void toggleZoom() {
             // zoom
             if (autoZoomToolStripMenuItem.Checked)
             {
@@ -131,117 +150,51 @@ namespace SS_OpenCV
         /// <param name="e"></param>
         private void grayToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (img == null) // verify if the image is already opened
-                return;
-            Cursor = Cursors.WaitCursor; // clock cursor 
-
-            history.Push(img.Copy());
-
-            ImageClass.ConvertToGray(img);
-
-            refresh();
-
-            Cursor = Cursors.Default; // normal cursor 
+            doAction((img) => {
+                ImageClass.ConvertToGray(img);
+                return img;
+            });
         }
-
-        /// <summary>
-        /// Calculate the image negative
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
 
         private void negativeToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
 
-            if (img == null) // verify if the image is already opened
-                return;
-            Cursor = Cursors.WaitCursor; // clock cursor 
-
-            history.Push(img.Copy());
-
-            //ImageClass.Negative(img);
-            ImageClass.DNegative(img);
-
-            refresh();
-
-            Cursor = Cursors.Default; // normal cursor 
-        }
-
-        private void bWToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (img == null) // verify if the image is already opened
-                return;
-            Cursor = Cursors.WaitCursor; // clock cursor 
-
-            history.Push(img.Copy());
-
-            ImageClass.ConvertToGray(img);
-
-            refresh();
-
-            Cursor = Cursors.Default; // normal cursor 
+            doAction((img) => {
+                ImageClass.DNegative(img);
+                return img;
+            });
         }
 
         private void redToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            if (img == null) // verify if the image is already opened
-                return;
-            Cursor = Cursors.WaitCursor; // clock cursor 
-
-            history.Push(img.Copy());
-
-            ImageClass.FilterComponent(img, ImageClass.Component.RED);
-
-            refresh();
-
-            Cursor = Cursors.Default; // normal cursor 
+            doAction((img) => {ImageClass.FilterComponent(img, ImageClass.Component.RED);
+                ImageClass.Median3x3(img);
+                return img;
+            });
         }
 
         private void greenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (img == null) // verify if the image is already opened
-                return;
-            Cursor = Cursors.WaitCursor; // clock cursor 
-
-            history.Push(img.Copy());
-
-            ImageClass.FilterComponent(img, ImageClass.Component.GREEN);
-
-            refresh();
-            Cursor = Cursors.Default; // normal cursor 
+            doAction((img) => {
+                ImageClass.FilterComponent(img, ImageClass.Component.GREEN);
+                return img;
+            });
         }
 
         private void blueToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (img == null) // verify if the image is already opened
-                return;
-            Cursor = Cursors.WaitCursor; // clock cursor 
-
-            history.Push(img.Copy());
-
-            ImageClass.FilterComponent(img, ImageClass.Component.BLUE);
-
-            refresh();
-
-            Cursor = Cursors.Default; // normal cursor 
+            doAction((img) => {
+                ImageClass.FilterComponent(img, ImageClass.Component.BLUE);
+                return img;
+            });
         }
 
         private void translationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (img == null) // verify if the image is already opened
-                return;
-
-            //show dialog
-            
-            Cursor = Cursors.WaitCursor; // clock cursor 
-
-            history.Push(img.Copy());
-
-            ImageClass.Translate(img, -30, -30);
-
-            refresh();
-
-            Cursor = Cursors.Default; // normal cursor 
+            doAction((img) => {
+                ImageClass.Translate(img, -30, -30);
+                return img;
+            });
         }
 
         private void imageToolStripMenuItem_Click(object sender, EventArgs e)
@@ -251,117 +204,64 @@ namespace SS_OpenCV
 
         private void typeAToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (img == null) // verify if the image is already opened
-                return;
-
-            //show dialog
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-            Cursor = Cursors.WaitCursor; // clock cursor 
-
-            history.Push(img.Copy());
-
-            ImageClass.Avg(img,3);
-
-            watch.Stop();
-            Console.WriteLine("---> %d ms ", watch.ElapsedMilliseconds);
-
-            refresh();
-
-            Cursor = Cursors.Default; // normal cursor 
+            doAction((img) => {
+                ImageClass.Avg(img,3);
+                return img;
+            }); 
         }
 
         private void robertsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (img == null) // verify if the image is already opened
-                return;
-
-            //show dialog
-
-            Cursor = Cursors.WaitCursor; // clock cursor 
-
-            history.Push(img.Copy());
-
-            ImageClass.EdgeDetectionRoberts(img);
-
-            refresh();
-
-            Cursor = Cursors.Default; // normal cursor 
+            doAction((img) => {
+                ImageClass.EdgeDetectionRoberts(img);
+                return img;
+            });
         }
 
         private void sobelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (img == null) // verify if the image is already opened
-                return;
-
-            //show dialog
-
-            Cursor = Cursors.WaitCursor; // clock cursor 
-
-            history.Push(img.Copy());
-
-            ImageClass.EdgeDetectionSobel3x3(img);
-
-            refresh();
-
-            Cursor = Cursors.Default; // normal cursor 
+            doAction((img) => {
+                //LPRecognition.EdgeDetectionSobel3x3(img);
+                ImageClass.EdgeDetectionSobel3x3(img);
+                return img;
+            });
         }
 
         private void medianToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (img == null) // verify if the image is already opened
-                return;
-
-            //show dialog
-
-            Cursor = Cursors.WaitCursor; // clock cursor 
-
-            history.Push(img.Copy());
-
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-            ImageClass.Median3x3(img);
-
-            watch.Stop();
-            Console.WriteLine("---> {0} ms ", watch.ElapsedMilliseconds);
-
-            refresh();
-
-            Cursor = Cursors.Default; // normal cursor 
+            doAction((img) => {
+                ImageClass.Median3x3(img);
+                return img;
+            });
         }
 
         private void histogramToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (img == null) // verify if the image is already opened
-                return;
-
-            //show dialog
-
-            Cursor = Cursors.WaitCursor; // clock cursor 
-
-
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-            ImageClass.Histogram h = ImageClass.ImageHistogram(img);
-            watch.Stop();
-            Console.WriteLine("---> {0} ms ", watch.ElapsedMilliseconds);
-            Histogram histogramWindow = new Histogram(h);
-            histogramWindow.Show();
-
-            Cursor = Cursors.Default; // normal cursor 
+            doAction((img) => {
+                ImageClass.Histogram h = ImageClass.ImageHistogram(img);
+                Histogram histogramWindow = new Histogram(h);
+            });
         }
 
         private void binarizeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            doAction((img) => {
+                ImageClass.OtsuBinarization(img);
+                return img;
+            });
+        }
+
+        private void sobelXToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             if (img == null) // verify if the image is already opened
                 return;
-
-            //show dialog
 
             Cursor = Cursors.WaitCursor; // clock cursor 
 
             history.Push(img.Copy());
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
-
-            ImageClass.OtsuBinarization(img);
+            ImageClass.EdgeDetectionSobel3x3X(img);
 
             watch.Stop();
             Console.WriteLine("---> {0} ms ", watch.ElapsedMilliseconds);
@@ -371,18 +271,89 @@ namespace SS_OpenCV
             Cursor = Cursors.Default; // normal cursor 
         }
 
-
-
-
-
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        private void sobelYToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (keyData == (Keys.Control | Keys.Z))
-            {
-                undo();
-                return true;
-            }
-            return base.ProcessCmdKey(ref msg, keyData);
+            if (img == null) // verify if the image is already opened
+                return;
+
+            Cursor = Cursors.WaitCursor; // clock cursor 
+
+            history.Push(img.Copy());
+
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            ImageClass.EdgeDetectionSobel3x3Y(img);
+
+            
+
+            refresh();
+
+            Cursor = Cursors.Default; // normal cursor 
+        }
+
+        private void showProjectionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            doAction((img) => {
+                ImageClass.Projection v = ImageClass.HProjection(img);
+                ImageClass.Projection h = ImageClass.VProjection(img);
+
+                GraphXY g = new GraphXY(v.values, h.values);
+            });
+            
+        }
+
+        private void goToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            doAction((img)=> {
+                //LPRecognition.detectLPCharacterRegionsX(img);
+                //LPRecognition.detectLPCharacterRegionsY(img);
+                LPRecognition.detectCharacterRegions(img);
+                return img;
+            });
+        }
+
+        private void doAction(Action<Image<Bgr,Byte>> a) {
+            if (img == null) // verify if the image is already opened
+                return;
+            Cursor = Cursors.WaitCursor; // clock cursor 
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            a(img);
+            watch.Stop();
+            Console.WriteLine("---> {0} ms ", watch.ElapsedMilliseconds);
+            Cursor = Cursors.Default; // normal cursor 
+        }
+        private void doAction(Func<Image<Bgr, Byte>,Image<Bgr, Byte>> a)
+        {
+            if (img == null) // verify if the image is already opened
+                return;
+            Cursor = Cursors.WaitCursor; // clock cursor 
+            history.Push(img.Copy());
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            img = a(img);
+            refresh();
+            watch.Stop();
+            Console.WriteLine("---> {0} ms ", watch.ElapsedMilliseconds);
+            Cursor = Cursors.Default; // normal cursor 
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lPHRegionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            doAction((img) => {
+                LPRecognition.detectLPCharacterRegionsX(img);
+                return img;
+            });
+        }
+
+        private void lPVRegionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            doAction((img) => {
+                LPRecognition.detectLPCharacterRegionsY(img);
+                return img;
+            });
         }
     }
 

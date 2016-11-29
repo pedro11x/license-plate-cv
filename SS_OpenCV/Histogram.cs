@@ -50,7 +50,12 @@ namespace SS_OpenCV
             chart.ChartAreas[0].AxisX.Title = "Intensidade";
             chart.ChartAreas[0].AxisY.Title = "Numero de pixeis";
             chart.ResumeLayout();
+            this.Show();
+        }
 
+        private void Histogram_Load(object sender, EventArgs e)
+        {
+            
         }
     }
 }
