@@ -137,3 +137,4 @@ C:\Users\Pedro\Documents\license-plate-cv\SS_OpenCV\bin\Debug\chardb\U.bmp
 C:\Users\Pedro\Documents\license-plate-cv\SS_OpenCV\bin\Debug\chardb\V.bmp
 C:\Users\Pedro\Documents\license-plate-cv\SS_OpenCV\bin\Debug\chardb\X.bmp
 C:\Users\Pedro\Documents\license-plate-cv\SS_OpenCV\bin\Debug\chardb\Z.bmp
+C:\Users\Pedro\Documents\license-plate-cv\SS_OpenCV\bin\Debug\SS_Eval.pdb

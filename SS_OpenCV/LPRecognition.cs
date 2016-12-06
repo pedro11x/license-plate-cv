@@ -18,7 +18,7 @@ namespace SS_OpenCV
         public class Region {
             public int startPoint, endPoint;
             public Region(int s, int e) { startPoint = s; endPoint = e; }
-            public int delta() { return endPoint - startPoint; }
+            public int delta { get { return endPoint - startPoint; } }
             override public String ToString() { return "["+startPoint+" > "+endPoint+"]"; }
         }
 
@@ -38,9 +38,10 @@ namespace SS_OpenCV
 
             for (int t = 0; t < p.peak; t++) {
                 List<Region> l = regionsListFromThreshold(p, t);
-                if (validRegionsListX(p, l)) rl = l;
+                l = joinAdjointRegions(l);
+                if (validRegionsListX(p, l)) { rl = l; break; }
             }
-
+            //if (rl != null) rl = joinAdjointRegions(rl);
             if (rl != null) {
                 List<int> ll = new List<int>();
                 foreach (Region r in rl)
@@ -50,6 +51,44 @@ namespace SS_OpenCV
             }
                 
             return rl;
+        }
+
+        static List<Region> joinAdjointRegions(List<Region> rs) {
+            List<Region> nrs = new List<Region>();
+            Region pr=null;
+            foreach (Region r in rs) {
+                if (pr == null) {
+                    pr = r;
+                } else if (r.startPoint - pr.endPoint <= 1) {
+                    pr = new Region(pr.startPoint,r.endPoint);
+                } else {
+                    nrs.Add(pr);
+                    pr = r;
+                }
+            }
+            if (pr != null) nrs.Add(pr);
+            return nrs;
+        }
+
+        public static bool validRegionsListX(ImageClass.Projection p, List<Region> l)
+        {
+            int size = p.values.Length;
+            double minCharSize = size * 0.04; //4%
+            double maxCharSize = size * 0.15; //10%
+            int s = 0, m = 0, g = 0;
+            foreach (Region r in l)
+            {
+                if (r.delta > minCharSize) s++;
+                if (r.delta < minCharSize) g++;
+                if (r.delta > maxCharSize) m++;
+            }
+
+            return
+                s >= 6 &&
+                //s < 9 && 
+                m == 0 &&
+                //g <= 2 &&
+                l.Count >= 6 && l.Count <= 10;
         }
 
         public static Region detectLPCharacterRegionsY(Image<Bgr, Byte> img)
@@ -88,18 +127,18 @@ namespace SS_OpenCV
             Console.WriteLine("peak:{0}, found threshold:{1}",p.peak,t);
 
             Region bestRegion = null;
-            foreach (Region r in rl) if (bestRegion == null || bestRegion.delta() < r.delta()) bestRegion = r;
+            foreach (Region r in rl) if (bestRegion == null || bestRegion.delta < r.delta) bestRegion = r;
             
             return bestRegion;
         }
         public static bool validRegionsListY(ImageClass.Projection p, List<Region> l)
         {
             int size = p.values.Length;
-            double minCharHeight = size * 0.7; //4%
+            double minCharHeight = size * 0.6; //60%
             int s = 0;
             foreach (Region r in l)
             {
-                if (r.delta() > minCharHeight) s++;
+                if (r.delta > minCharHeight) s++;
             }
 
             return
@@ -108,7 +147,7 @@ namespace SS_OpenCV
                 ;
         }
 
-        public static void detectCharacterRegions(Image<Bgr, Byte> img) {
+        public static void detectCharacterRegions(Image<Bgr, Byte> img, MainForm.ImageUpdateble u) {
             Image<Bgr, Byte> imgcpy = img.Copy();
 
             List<Region> hrl = detectLPCharacterRegionsX(imgcpy);
@@ -120,9 +159,13 @@ namespace SS_OpenCV
             ImageClass.OtsuBinarization(img);
             ImageClass.DNegative(img);
 
-            Utils.markVRegion(hrl, img);
+            if(hrl!=null)Utils.markVRegion(hrl, img);
             List<Region> temp = new List<Region>();temp.Add(vr);
             Utils.markHRegion(temp, img);
+
+            if(hrl!=null)foreach(Region r in hrl){
+                if(u!=null)u.updateImage(Utils.cutXRegion(img, r));
+            }
         }
 
         public static List<Region> regionsListFromThreshold(ImageClass.Projection p, int t) {
@@ -150,23 +193,6 @@ namespace SS_OpenCV
 
         
 
-        public static bool validRegionsListX(ImageClass.Projection p, List<Region> l)
-        {
-            int size = p.values.Length;
-            double minCharSize = size * 0.04; //4%
-            double maxCharSize = size * 0.1; //10%
-            int s = 0, m=0;
-            foreach (Region r in l) {
-                if ((r.endPoint-r.startPoint)>minCharSize) s++;
-                if ((r.endPoint - r.startPoint) > maxCharSize) m++;
-            } 
-
-            return 
-                //s >= 6 && 
-                //s < 9 && 
-                //m == 0 && 
-                l.Count==10;
-        }
 
         
 

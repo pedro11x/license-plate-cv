@@ -11,7 +11,7 @@ using Emgu.CV.Structure;
 
 namespace SS_OpenCV
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form, MainForm.ImageUpdateble
     {
         Image<Bgr, Byte> img = null; // working image
         //Image<Bgr, Byte> imgUndo = null; // undo backup image - UNDO
@@ -21,7 +21,8 @@ namespace SS_OpenCV
         public MainForm()
         {
             InitializeComponent();
-            title_bak = Text;            
+            title_bak = Text;
+            toggleZoom();
         }
 
         /// <summary>
@@ -306,7 +307,7 @@ namespace SS_OpenCV
             doAction((img)=> {
                 //LPRecognition.detectLPCharacterRegionsX(img);
                 //LPRecognition.detectLPCharacterRegionsY(img);
-                LPRecognition.detectCharacterRegions(img);
+                LPRecognition.detectCharacterRegions(img, this);
                 return img;
             });
         }
@@ -354,6 +355,22 @@ namespace SS_OpenCV
                 LPRecognition.detectLPCharacterRegionsY(img);
                 return img;
             });
+        }
+
+        public void updateImage(Image<Bgr, byte> newimg)
+        {
+            doAction((img)=> {
+                return newimg;
+            });
+        }
+
+        public interface ImageUpdateble {
+            void updateImage(Image<Bgr, Byte> img);
+        }
+
+        private void evalFormToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new SS_OpenCV.EvalForm().ShowDialog();
         }
     }
 

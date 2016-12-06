@@ -14,7 +14,7 @@ namespace SS_OpenCV
         /// Slower method
         /// </summary>
         /// <param name="img">Image</param>
-        internal static void Negative(Image<Bgr, byte> img)
+        public static void Negative(Image<Bgr, byte> img)
         {
             Bgr aux;
             for (int y = 0; y < img.Height; y++)
@@ -32,7 +32,7 @@ namespace SS_OpenCV
         /// Image Negative
         /// </summary>
         /// <param name="img">Image</param>
-        internal static void DNegative(Image<Bgr, byte> img)
+        public static void DNegative(Image<Bgr, byte> img)
         {
             unsafe
             {
@@ -75,7 +75,7 @@ namespace SS_OpenCV
         /// Direct access to memory
         /// </summary>
         /// <param name="img">image</param>
-        internal static void ConvertToGray(Image<Bgr, byte> img)
+        public static void ConvertToGray(Image<Bgr, byte> img)
         {
             unsafe
             {
@@ -125,7 +125,7 @@ namespace SS_OpenCV
         /// Direct access to memory
         /// </summary>
         /// <param name="img">image</param>
-        internal static void FilterComponent(Image<Bgr, byte> img, Component color)
+        public static void FilterComponent(Image<Bgr, byte> img, Component color)
         {
             unsafe
             {
@@ -177,7 +177,7 @@ namespace SS_OpenCV
         /// Direct access to memory
         /// </summary>
         /// <param name="img">image</param>
-        internal static void Translate(Image<Bgr, byte> img, int dX, int dY)
+        public static void Translate(Image<Bgr, byte> img, int dX, int dY)
         {
             Image<Bgr, byte> source = img.Clone();
             unsafe
@@ -230,7 +230,7 @@ namespace SS_OpenCV
         /// Rotate image with center origin
         /// </summary>
         /// <param name="img">image</param>
-        internal static void Rotate(Image<Bgr, byte> img, double angle)
+        public static void Rotate(Image<Bgr, byte> img, double angle)
         {
             Image<Bgr, byte> source = img.Clone();
             unsafe
@@ -295,7 +295,7 @@ namespace SS_OpenCV
         /// </summary>
         /// <param name="filterSize">size of filter (3 for 3x3, 5 for 5x5), must be odd number</param>
         /// <param name="img">image</param>
-        internal static void Avg(Image<Bgr, byte> img, int filterSize)
+        public static void Avg(Image<Bgr, byte> img, int filterSize)
         {
             int avgHeight = filterSize,
                 avgWidth = filterSize;
@@ -373,7 +373,7 @@ namespace SS_OpenCV
         /// Roberts Edge detection filter
         /// </summary>
         /// <param name="img">image</param>
-        internal static void EdgeDetectionRoberts(Image<Bgr, byte> img)
+        public static void EdgeDetectionRoberts(Image<Bgr, byte> img)
         {
             Image<Bgr, byte> source = img.Clone();
             unsafe
@@ -445,7 +445,7 @@ namespace SS_OpenCV
         /// Sobel Edge detection filter 3 x 3
         /// </summary>
         /// <param name="img">image</param>
-        internal static void EdgeDetectionSobel3x3(Image<Bgr, byte> img)
+        public static void EdgeDetectionSobel3x3(Image<Bgr, byte> img)
         {
             Image<Bgr, byte> source = img.Clone();
             unsafe
@@ -641,7 +641,7 @@ namespace SS_OpenCV
         /// 3D Median filter 3x3
         /// </summary>
         /// <param name="img">image</param>
-        internal static void Median3x3(Image<Bgr, byte> img)
+        public static void Median3x3(Image<Bgr, byte> img)
         {
             Image<Bgr, byte> source = img.Clone();
             unsafe
@@ -727,7 +727,7 @@ namespace SS_OpenCV
             }
         }
 
-        internal static Histogram ImageHistogram(Image<Bgr, byte> img)
+        public static Histogram ImageHistogram(Image<Bgr, byte> img)
         {
             Histogram h = new Histogram(256);
             unsafe
@@ -760,7 +760,7 @@ namespace SS_OpenCV
         }
 
 
-        internal static void Binarization(Image<Bgr, byte> img, int threshold)
+        public static void Binarization(Image<Bgr, byte> img, int threshold)
         {
             unsafe
             {
@@ -791,7 +791,7 @@ namespace SS_OpenCV
             }
         }
 
-        internal static void OtsuBinarization(Image<Bgr, byte> img)
+        public static void OtsuBinarization(Image<Bgr, byte> img)
         {
             int bestT = 0;
             double o2max = 0;
@@ -837,7 +837,7 @@ namespace SS_OpenCV
         /// Sobel Edge detection filter 3 x 3
         /// </summary>
         /// <param name="img">image</param>
-        internal static void EdgeDetectionSobel3x3X(Image<Bgr, byte> img)
+        public static void EdgeDetectionSobel3x3X(Image<Bgr, byte> img)
         {
             Image<Bgr, byte> source = img.Clone();
             unsafe
@@ -974,7 +974,7 @@ namespace SS_OpenCV
         /// Sobel Edge detection filter 3 x 3
         /// </summary>
         /// <param name="img">image</param>
-        internal static void EdgeDetectionSobel3x3Y(Image<Bgr, byte> img)
+        public static void EdgeDetectionSobel3x3Y(Image<Bgr, byte> img)
         {
             Image<Bgr, byte> source = img.Clone();
             unsafe
@@ -1112,7 +1112,7 @@ namespace SS_OpenCV
         /// Image must be binary
         /// </summary>
         /// <param name="img">image</param>
-        internal static Projection VProjection(Image<Bgr, byte> img)
+        public static Projection VProjection(Image<Bgr, byte> img)
         {
             int[] v;
             int peak = 0;
@@ -1158,7 +1158,7 @@ namespace SS_OpenCV
         /// Image must be binary
         /// </summary>
         /// <param name="img">image</param>
-        internal static Projection HProjection(Image<Bgr, byte> img)
+        public static Projection HProjection(Image<Bgr, byte> img)
         {
             int[] v;
             int peak = 0;
