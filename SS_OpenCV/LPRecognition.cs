@@ -10,10 +10,7 @@ namespace SS_OpenCV
 {
     class LPRecognition
     {
-        public static void LPLocalization(Image<Bgr, Byte> img) {
-            
-
-        }
+        private static bool _DEB = true;
 
         public class Region {
             public int startPoint, endPoint;
@@ -22,12 +19,13 @@ namespace SS_OpenCV
             override public String ToString() { return "["+startPoint+" > "+endPoint+"]"; }
         }
 
-        
+        public static MainForm.ImageUpdateble iu = null;
 
-        public static List<Region> detectLPCharacterRegionsX(Image<Bgr, Byte> img)
+        public static List<Region> detectLPCharacterHorizontally(Image<Bgr, Byte> img)
         {
-            ImageClass.EdgeDetectionSobel3x3Y(img);
-            ImageClass.OtsuBinarization(img);
+            //ImageClass.EdgeDetectionSobel3x3Y(img);
+            //ImageClass.DNegative(img);
+            //ImageClass.OtsuBinarization(img);
             ImageClass.Projection p = ImageClass.HProjection(img);
 
             List<Region> rl = null;
@@ -43,6 +41,7 @@ namespace SS_OpenCV
             }
             //if (rl != null) rl = joinAdjointRegions(rl);
             if (rl != null) {
+                Console.WriteLine("ajefhçwehfçiuwehfçiquwehfçi");
                 List<int> ll = new List<int>();
                 foreach (Region r in rl)
                 { ll.Add(r.startPoint); ll.Add(r.endPoint); }
@@ -91,17 +90,18 @@ namespace SS_OpenCV
                 l.Count >= 6 && l.Count <= 10;
         }
 
-        public static Region detectLPCharacterRegionsY(Image<Bgr, Byte> img)
+        public static Region findCentralRegion(Image<Bgr, Byte> img)
         {
-            ImageClass.EdgeDetectionSobel3x3X(img);
-            ImageClass.OtsuBinarization(img);
+            //ImageClass.EdgeDetectionSobel3x3X(img);
+            //ImageClass.DNegative(img);
+            //ImageClass.OtsuBinarization(img);
 
             ImageClass.Projection p = ImageClass.VProjection(img);
             List<Region> rl = null;
 
             //new GraphXY(new int[1], p.values);
             Utils.applyMovingAverage(p, 0.01);
-            new GraphXY(new int[1], p.values);
+            //new GraphXY(new int[1], p.values);
             int t;
             for (t = p.peak; t > 0 ; t--)
             {
@@ -147,25 +147,52 @@ namespace SS_OpenCV
                 ;
         }
 
-        public static void detectCharacterRegions(Image<Bgr, Byte> img, MainForm.ImageUpdateble u) {
-            Image<Bgr, Byte> imgcpy = img.Copy();
+        public static List<Image<Bgr, Byte>> detectCharacterRegions(Image<Bgr, Byte> _img, MainForm.ImageUpdateble u) {
+            Image<Bgr, Byte> img = _img;
 
-            List<Region> hrl = detectLPCharacterRegionsX(imgcpy);
-
-            imgcpy = img.Copy();
-
-            Region vr = detectLPCharacterRegionsY(imgcpy);
-
-            ImageClass.OtsuBinarization(img);
             ImageClass.DNegative(img);
+            ImageClass.OtsuBinarization(img);
 
-            if(hrl!=null)Utils.markVRegion(hrl, img);
-            List<Region> temp = new List<Region>();temp.Add(vr);
-            Utils.markHRegion(temp, img);
+            List<Region> hrl = detectLPCharacterHorizontally(img.Copy());
 
-            if(hrl!=null)foreach(Region r in hrl){
-                if(u!=null)u.updateImage(Utils.cutXRegion(img, r));
+            List<Image<Bgr, Byte>> charImages = new List<Image<Bgr, byte>>();
+
+            //ImageClass.OtsuBinarization(img);
+            //ImageClass.DNegative(img);
+
+            if (_DEB) { 
+                //if (hrl != null) Utils.markVRegion(hrl, _img);
+                //List<Region> temp = new List<Region>(); temp.Add(vr);
+                //Utils.markHRegion(temp, _img);
             }
+
+            if(hrl!=null)
+                foreach (Region r in hrl){
+                    //if(u!=null)u.updateImage(Utils.cutXRegion(img, r));
+                    
+                    Image<Bgr, Byte> ci = Utils.cutXRegion(img, r);
+                    Region vr = findCentralRegion(img.Copy());
+                    charImages.Add(Utils.cutYRegion(ci, vr));
+
+                }
+            //if(u!=null)u.updateImage(Utils.cutYRegion(img, vr));
+
+            return charImages;
+        }
+
+        public static string read(Image<Bgr,Byte> img) {
+            List<Image<Bgr, Byte>> charImages = detectCharacterRegions(img, null);
+            string lp="";
+            foreach (Image<Bgr, Byte> ci in charImages) {
+                char character;
+                double confidence = CharDB.GetInstance().match(ci, out character);
+                //Console.WriteLine("{0} ({1})", character, confidence);
+                if (confidence > 0.7) {
+                    lp += character;
+                }
+            }
+            Console.WriteLine(lp);
+            return lp;
         }
 
         public static List<Region> regionsListFromThreshold(ImageClass.Projection p, int t) {

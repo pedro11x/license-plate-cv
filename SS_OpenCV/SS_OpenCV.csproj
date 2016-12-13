@@ -89,6 +89,7 @@
       <DependentUpon>AuthorsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CharDB.cs" />
+    <Compile Include="LPLocation.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Graph.cs">
       <SubType>Form</SubType>

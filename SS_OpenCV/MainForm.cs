@@ -23,6 +23,10 @@ namespace SS_OpenCV
             InitializeComponent();
             title_bak = Text;
             toggleZoom();
+
+            char c;
+            CharDB.GetInstance().match(CharDB.GetInstance().db['X'], out c);
+            Console.WriteLine("---X is {0}", c);
         }
 
         /// <summary>
@@ -36,9 +40,7 @@ namespace SS_OpenCV
             {
                 if(img!=null) history.Push(img.Copy());
                 img = new Image<Bgr, byte>(openFileDialog1.FileName);
-                Text = title_bak + " [" +
-                        openFileDialog1.FileName.Substring(openFileDialog1.FileName.LastIndexOf("\\") + 1) +
-                        "]";
+                Text = title_bak + " [" + openFileDialog1.FileName.Substring(openFileDialog1.FileName.LastIndexOf("\\") + 1) + "]";
                 refresh();
                 
             }
@@ -304,10 +306,13 @@ namespace SS_OpenCV
 
         private void goToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            LPLocation.iu = this;
             doAction((img)=> {
                 //LPRecognition.detectLPCharacterRegionsX(img);
                 //LPRecognition.detectLPCharacterRegionsY(img);
-                LPRecognition.detectCharacterRegions(img, this);
+                //LPRecognition.detectCharacterRegions(img, this);
+                //LPRecognition.read(img);
+                img = LPLocation.t(img);
                 return img;
             });
         }
@@ -344,7 +349,7 @@ namespace SS_OpenCV
         private void lPHRegionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             doAction((img) => {
-                LPRecognition.detectLPCharacterRegionsX(img);
+                LPRecognition.detectLPCharacterHorizontally(img);
                 return img;
             });
         }
@@ -352,7 +357,7 @@ namespace SS_OpenCV
         private void lPVRegionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             doAction((img) => {
-                LPRecognition.detectLPCharacterRegionsY(img);
+                LPRecognition.findCentralRegion(img);
                 return img;
             });
         }
@@ -371,6 +376,16 @@ namespace SS_OpenCV
         private void evalFormToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new SS_OpenCV.EvalForm().ShowDialog();
+        }
+
+        private void readLicenseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            doAction((img) => {
+                //LPRecognition.detectLPCharacterRegionsX(img);
+                //LPRecognition.detectLPCharacterRegionsY(img);
+                //LPRecognition.detectCharacterRegions(img, this);
+                LPRecognition.read(img);
+            });
         }
     }
 

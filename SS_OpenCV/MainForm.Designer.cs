@@ -70,9 +70,10 @@
             this.lPHRegionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lPVRegionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.evalFormToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.ImageViewer = new System.Windows.Forms.PictureBox();
-            this.evalFormToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.readLicenseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ImageViewer)).BeginInit();
@@ -159,7 +160,8 @@
             this.binarizeToolStripMenuItem,
             this.showProjectionsToolStripMenuItem,
             this.goToolStripMenuItem,
-            this.testsToolStripMenuItem});
+            this.testsToolStripMenuItem,
+            this.readLicenseToolStripMenuItem});
             this.imageToolStripMenuItem.Name = "imageToolStripMenuItem";
             this.imageToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
             this.imageToolStripMenuItem.Text = "Image";
@@ -402,6 +404,13 @@
             this.autoresToolStripMenuItem.Text = "Autores...";
             this.autoresToolStripMenuItem.Click += new System.EventHandler(this.autoresToolStripMenuItem_Click);
             // 
+            // evalFormToolStripMenuItem
+            // 
+            this.evalFormToolStripMenuItem.Name = "evalFormToolStripMenuItem";
+            this.evalFormToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
+            this.evalFormToolStripMenuItem.Text = "EvalForm";
+            this.evalFormToolStripMenuItem.Click += new System.EventHandler(this.evalFormToolStripMenuItem_Click);
+            // 
             // panel1
             // 
             this.panel1.AutoScroll = true;
@@ -421,12 +430,12 @@
             this.ImageViewer.TabIndex = 6;
             this.ImageViewer.TabStop = false;
             // 
-            // evalFormToolStripMenuItem
+            // readLicenseToolStripMenuItem
             // 
-            this.evalFormToolStripMenuItem.Name = "evalFormToolStripMenuItem";
-            this.evalFormToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
-            this.evalFormToolStripMenuItem.Text = "EvalForm";
-            this.evalFormToolStripMenuItem.Click += new System.EventHandler(this.evalFormToolStripMenuItem_Click);
+            this.readLicenseToolStripMenuItem.Name = "readLicenseToolStripMenuItem";
+            this.readLicenseToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.readLicenseToolStripMenuItem.Text = "ReadLicense";
+            this.readLicenseToolStripMenuItem.Click += new System.EventHandler(this.readLicenseToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -496,6 +505,7 @@
         private System.Windows.Forms.ToolStripMenuItem lPHRegionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem lPVRegionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem evalFormToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem readLicenseToolStripMenuItem;
     }
 }
 

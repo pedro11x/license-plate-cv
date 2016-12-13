@@ -15,6 +15,7 @@ namespace SS_OpenCV
             int d = (int)(p.values.Length * f / 2);
             int[] v = new int[p.values.Length];
             Console.WriteLine("--d: {0}, size: {1}", d, p.values.Length);
+            p.peak = 0;
             for (int i = d; i < (p.values.Length - 1 - d); i++)
             {
 
@@ -141,6 +142,45 @@ namespace SS_OpenCV
                         dstPtr[dstLineOffset * y + x * nChan] = srcPtr[srcLineOffset * y + (x + region.startPoint) * nChan];
                         dstPtr[dstLineOffset * y + x * nChan + 1] = srcPtr[srcLineOffset * y + (x + region.startPoint) * nChan + 1];
                         dstPtr[dstLineOffset * y + x * nChan + 2] = srcPtr[srcLineOffset * y + (x + region.startPoint) * nChan + 2];
+                    }
+                }
+            }
+
+
+            return portion;
+        }
+
+
+        public static Image<Bgr, Byte> cutYRegion(Image<Bgr, Byte> img, Region region)
+        {
+            Image<Bgr, Byte> portion = new Image<Bgr, byte>(img.Width, region.delta);
+
+            unsafe
+            {
+                MIplImage sm = img.MIplImage;
+                byte* srcPtr = (byte*)sm.imageData.ToPointer(); // Pointer to the image
+
+                MIplImage dm = portion.MIplImage;
+                byte* dstPtr = (byte*)dm.imageData.ToPointer();
+
+                int width = img.Width;
+                int height = img.Height;
+
+                int nChan = sm.nChannels; // number of channels - 3
+
+                int srcPadding = sm.widthStep - sm.nChannels * sm.width; // alinhament bytes (padding)
+                int srcLineOffset = nChan * width + srcPadding;
+
+                int dstPadding = dm.widthStep - dm.nChannels * dm.width; // alinhament bytes (padding)
+                int dstLineOffset = dm.nChannels * dm.width + dstPadding;
+
+                for (int x = 0; x < img.Width; x++)
+                {
+                    for (int y = 0; y < region.delta; y++)
+                    {
+                        dstPtr[dstLineOffset * y + x * nChan + 0] = srcPtr[srcLineOffset * (y + region.startPoint) + x * nChan];
+                        dstPtr[dstLineOffset * y + x * nChan + 1] = srcPtr[srcLineOffset * (y + region.startPoint) + x * nChan + 1];
+                        dstPtr[dstLineOffset * y + x * nChan + 2] = srcPtr[srcLineOffset * (y + region.startPoint) + x * nChan + 2];
                     }
                 }
             }
