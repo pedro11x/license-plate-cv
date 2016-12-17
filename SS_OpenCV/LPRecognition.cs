@@ -16,7 +16,9 @@ namespace SS_OpenCV
             public int startPoint, endPoint;
             public Region(int s, int e) { startPoint = s; endPoint = e; }
             public int delta { get { return endPoint - startPoint; } }
-            override public String ToString() { return "["+startPoint+" > "+endPoint+"]"; }
+            override public String ToString() { return "[" + startPoint + " > " + endPoint + "]"; }
+            public bool inside(int p) { return p > startPoint && p < endPoint; }
+            public System.Drawing.Rectangle x(Region r){return new System.Drawing.Rectangle(startPoint,r.startPoint,delta,r.delta);}
         }
 
         public static MainForm.ImageUpdateble iu = null;
@@ -36,17 +38,16 @@ namespace SS_OpenCV
 
             for (int t = 0; t < p.peak; t++) {
                 List<Region> l = regionsListFromThreshold(p, t);
-                l = joinAdjointRegions(l);
+                //l = joinAdjointRegions(l);
                 if (validRegionsListX(p, l)) { rl = l; break; }
             }
+
             //if (rl != null) rl = joinAdjointRegions(rl);
             if (rl != null) {
                 Console.WriteLine("ajefhçwehfçiuwehfçiquwehfçi");
-                List<int> ll = new List<int>();
                 foreach (Region r in rl)
-                { ll.Add(r.startPoint); ll.Add(r.endPoint); }
                 Utils.markVRegion(rl, img);
-                Utils.markVLines(ll, img);
+                iu.updateImage(img);
             }
                 
             return rl;
@@ -101,35 +102,34 @@ namespace SS_OpenCV
 
             //new GraphXY(new int[1], p.values);
             Utils.applyMovingAverage(p, 0.01);
-            //new GraphXY(new int[1], p.values);
-            int t;
-            for (t = p.peak; t > 0 ; t--)
+            Console.WriteLine("[Finding central region {0}]", p.peak);
+            int middle = img.Height / 2;
+            int start = p.peak/8;
+            for (int i = 0; i < p.peak ; i++)
             {
+                int t = start + ((i%2==0)?(i/2):(-i));
+                if (t > p.peak || t < 0) continue;
+
                 List<Region> l = regionsListFromThreshold(p, t);
-                if (validRegionsListY(p, l))
-                {
-                    rl = l;
-                    break;
+                Region r = getMiddleRegion(l, middle);
+                if (r != null) {
+                    Console.WriteLine("peak:{0}, found threshold:{1}", p.peak, t);
+                    new GraphXY(new int[1], p.values, "Threshold: "+t);
+                    return r;
                 }
             }
-            
-            if (rl != null)
-            {
-                List<int> ll = new List<int>();
-                foreach (Region r in rl)
-                { ll.Add(r.startPoint); ll.Add(r.endPoint); }
-                Utils.markHRegion(rl, img);
-                //markVLines(ll, img);
-            }
 
+            /*
             foreach(Region r in regionsListFromThreshold(p, 60)) { Console.WriteLine(r); }
 
-            Console.WriteLine("peak:{0}, found threshold:{1}",p.peak,t);
+           
 
             Region bestRegion = null;
             foreach (Region r in rl) if (bestRegion == null || bestRegion.delta < r.delta) bestRegion = r;
             
             return bestRegion;
+            */
+            return null;
         }
         public static bool validRegionsListY(ImageClass.Projection p, List<Region> l)
         {
@@ -145,6 +145,12 @@ namespace SS_OpenCV
                 s == 1
                 //&& l.Count < 3
                 ;
+        }
+        static Region getMiddleRegion(List<Region> rl, int m) {
+            foreach (Region r in rl) {
+                if (r.inside(m)) return r;
+            }
+            return null;
         }
 
         public static List<Image<Bgr, Byte>> detectCharacterRegions(Image<Bgr, Byte> _img, MainForm.ImageUpdateble u) {
@@ -169,12 +175,25 @@ namespace SS_OpenCV
             if(hrl!=null)
                 foreach (Region r in hrl){
                     //if(u!=null)u.updateImage(Utils.cutXRegion(img, r));
-                    
-                    Image<Bgr, Byte> ci = Utils.cutXRegion(img, r);
-                    Region vr = findCentralRegion(img.Copy());
-                    charImages.Add(Utils.cutYRegion(ci, vr));
 
+                    Image<Bgr, Byte> ci = img.Copy(new System.Drawing.Rectangle(r.startPoint,0,r.delta,img.Height));//Utils.cutXRegion(img, r);
+
+                    Region vr = findCentralRegion(ci);
+
+                    if (vr == null) continue;
+
+                    System.Drawing.Rectangle rectangle = r.x(vr);
+
+                    Image<Bgr, Byte> vc = img.Copy(rectangle);
+
+
+                    Utils.markRectangle(rectangle, _img);
+                    
+                        charImages.Add(vc);
+                    iu.updateImage(vc);
+                    //System.Threading.Thread.Sleep(1000);
                 }
+            iu.updateImage(_img);
             //if(u!=null)u.updateImage(Utils.cutYRegion(img, vr));
 
             return charImages;
@@ -185,6 +204,7 @@ namespace SS_OpenCV
             string lp="";
             foreach (Image<Bgr, Byte> ci in charImages) {
                 char character;
+                
                 double confidence = CharDB.GetInstance().match(ci, out character);
                 //Console.WriteLine("{0} ({1})", character, confidence);
                 if (confidence > 0.7) {

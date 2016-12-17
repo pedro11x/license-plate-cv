@@ -27,6 +27,9 @@ namespace SS_OpenCV
             char c;
             CharDB.GetInstance().match(CharDB.GetInstance().db['X'], out c);
             Console.WriteLine("---X is {0}", c);
+
+            LPLocation.iu = this;
+            LPRecognition.iu = this;
         }
 
         /// <summary>
@@ -306,7 +309,7 @@ namespace SS_OpenCV
 
         private void goToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LPLocation.iu = this;
+            
             doAction((img)=> {
                 //LPRecognition.detectLPCharacterRegionsX(img);
                 //LPRecognition.detectLPCharacterRegionsY(img);

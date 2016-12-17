@@ -12,6 +12,9 @@ namespace SS_OpenCV
 {
     public partial class GraphXY : Form
     {
+        public GraphXY(int[] h, int[] v, string name) : this(h, v) {
+            Text = name;
+        }
         public GraphXY(int[] h, int[] v)
         {
             InitializeComponent();

@@ -87,6 +87,29 @@ namespace SS_OpenCV
             }
         }
 
+        public static void markRectangle(System.Drawing.Rectangle r, Image<Bgr, Byte> img)
+        {
+            unsafe
+            {
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int lineOffset = nChan * width + padding;
+                for (int i = r.Top; i < r.Bottom; i++)
+                    for (int w = r.Left; w < r.Right; w++)
+                    {
+                        //dataPtr[lineOffset * i + w * nChan] = 0;
+                        dataPtr[lineOffset * i + w * nChan + 1] += 255;
+                        //dataPtr[lineOffset * i + w * nChan + 2] = 255;
+                    }
+
+            }
+            
+        }
+
         public static void markVLines(List<int> ls, Image<Bgr, Byte> img)
         {
 
