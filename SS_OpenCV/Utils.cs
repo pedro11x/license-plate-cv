@@ -102,7 +102,7 @@ namespace SS_OpenCV
                     for (int w = r.Left; w < r.Right; w++)
                     {
                         //dataPtr[lineOffset * i + w * nChan] = 0;
-                        dataPtr[lineOffset * i + w * nChan + 1] += 255;
+                        dataPtr[lineOffset * i + w * nChan + 1] = (byte)(255 - dataPtr[lineOffset * i + w * nChan + 1]);
                         //dataPtr[lineOffset * i + w * nChan + 2] = 255;
                     }
 

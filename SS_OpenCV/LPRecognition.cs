@@ -219,7 +219,7 @@ namespace SS_OpenCV
             List<Region> l = new List<Region>();
             Region curr = null;
             for (int i = 0; i<p.values.Length; i++) {
-                if (p.values[i] >= t)
+                if (p.values[i] > t)
                 {
                     if (curr == null)
                     {
