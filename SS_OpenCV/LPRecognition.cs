@@ -37,7 +37,7 @@ namespace SS_OpenCV
                 //l = joinAdjointRegions(l);
                 if (validRegionsListX(p, l)) { rl = l; break; }
             }
-            //if (_DEB)
+            if (_DEB)
                 new GraphXY(p.values, new int[1],"found threshold:"+t);
             //if (rl != null) rl = joinAdjointRegions(rl);
             if (rl != null) {

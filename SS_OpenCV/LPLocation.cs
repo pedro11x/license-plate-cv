@@ -23,7 +23,7 @@ namespace SS_OpenCV
 
         public static Image<Bgr, Byte> t(Image<Bgr,Byte> _img) {
             Image<Bgr, Byte> img = _img.Copy();
-            ImageClass.OtsuBinarization(img);
+            
             System.Drawing.Rectangle r = getYLocationImage(img);
             if (r != NULLR)
                 return _img.Copy(r);
@@ -31,8 +31,10 @@ namespace SS_OpenCV
                 return _img;
         }
 
-        public static System.Drawing.Rectangle getYLocationImage(Image<Bgr, Byte> _img) {
-            Image<Bgr, Byte> img = _img.Copy();
+        public static System.Drawing.Rectangle getYLocationImage(Image<Bgr, Byte> original) {
+            Image<Bgr, Byte> binary = original.Copy();
+            ImageClass.OtsuBinarization(binary);
+            Image<Bgr, Byte> img = binary.Copy();
             ImageClass.EdgeDetectionSobel3x3X(img);
             
             ImageClass.Projection p = ImageClass.VProjection(img);
@@ -47,10 +49,20 @@ namespace SS_OpenCV
                 Console.WriteLine("trying for {0}", i);
                 List<Region> rl = LPRecognition.regionsListFromThreshold(p, i);
                 foreach (Region r in rl) {
-                    Image<Bgr, Byte> cut = _img.Copy(new System.Drawing.Rectangle(0, r.startPoint, img.Width, r.delta));
-                    iu.updateImage(cut);
-                    System.Drawing.Rectangle fr = locateHorizontally(cut);
-                    if (fr != NULLR) return fr;
+                    Image<Bgr, Byte> cut = binary.Copy(new System.Drawing.Rectangle(0, r.startPoint, img.Width, r.delta));
+                    //iu.updateImage(cut);
+                    List<Region> frs = locateHorizontally(cut);
+                    if (frs.Count!=0) {
+                        foreach (Region fr in frs) {
+                            Image<Bgr, Byte> possibleLp = original.Copy(fr.x(r));
+                            iu.updateImage(possibleLp);
+                            string lp = LPRecognition.read(possibleLp);
+                            if (!String.IsNullOrWhiteSpace(lp))
+                                return fr.x(r);
+                        }
+                        
+                        //return fr;
+                    } 
                 }
             }
 
@@ -65,16 +77,18 @@ namespace SS_OpenCV
 
         public static MainForm.ImageUpdateble iu = null;
 
-        public static System.Drawing.Rectangle locateHorizontally(Image<Bgr, Byte> _img)
+        public static List<Region> locateHorizontally(Image<Bgr, Byte> _img)
         {
             Image<Bgr, Byte> img = _img.Copy();
             ImageClass.EdgeDetectionSobel3x3Y(img);
 
+            List<Region> vrl = new List<Region>();
+
             ImageClass.Projection p = ImageClass.HProjection(img);
-            if (p.peak < 3) return NULLR;
+            if (p.peak < 7) return vrl;
             Utils.applyMovingAverage(p, .02);
 
-            new GraphXY(p.values, new int[1]);
+            //new GraphXY(p.values, new int[1]);
             double stepdiv = 0.1;
             int step = (int)((p.peak * stepdiv > 1) ? (p.peak * stepdiv) : 1);
             for (int i = 0; i < p.peak; i += step)
@@ -85,11 +99,13 @@ namespace SS_OpenCV
                 {
                     //Image<Bgr, Byte> lp = _img.Copy();
                     System.Drawing.Rectangle rect = new System.Drawing.Rectangle(r.startPoint, 0, r.delta, img.Height);
-                    if (acceptLP(rect)) return rect;
+                    if (acceptLP(rect)) {
+                        vrl.Add(r);
+                        //return rect;
+                    }
                 }
             }
-            return NULLR;
-            //return new System.Drawing.Rectangle(0, 0, img.Width, img.Height);
+            return vrl;
         }
 
 
