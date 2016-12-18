@@ -12,6 +12,8 @@ namespace SS_OpenCV
     {
         private static bool _DEB = false;
 
+        private static int avgCharSize;
+
         public class Region {
             public int startPoint, endPoint;
             public Region(int s, int e) { startPoint = s; endPoint = e; }
@@ -148,7 +150,9 @@ namespace SS_OpenCV
                 //Utils.markHRegion(temp, _img);
             }
 
-            if (hrl != null)
+            int sumCharSize = 0;
+
+            if (hrl != null) {
                 foreach (Region r in hrl) {
                     //if(u!=null)u.updateImage(Utils.cutXRegion(img, r));
 
@@ -162,15 +166,20 @@ namespace SS_OpenCV
 
                     Image<Bgr, Byte> vc = img.Copy(rectangle);
 
+                    sumCharSize += r.delta;
 
                     Utils.markRectangle(rectangle, _img);
 
                     charImages.Add(vc);
-                    if(_DEB)iu.updateImage(vc);
+                    if (_DEB) iu.updateImage(vc);
                     //System.Threading.Thread.Sleep(1000);
                 }
-            iu.updateImage(_img);
+                avgCharSize = sumCharSize / hrl.Count;
+            }
+            if(_DEB)iu.updateImage(_img);
             //if(u!=null)u.updateImage(Utils.cutYRegion(img, vr));
+
+            
 
             return charImages;
         }
@@ -191,18 +200,18 @@ namespace SS_OpenCV
                 }
             }
             */
-            Console.WriteLine(lp);
+            if(_DEB)Console.WriteLine(lp);
             return lp;
         }
 
         public static string readPTPlate(List<Image<Bgr,Byte>> chars) {
             List<List<Image<Bgr, Byte>>> cparts = splitOnDots(chars, 2);
-            Console.WriteLine("nfound{0}", cparts.Count);
+            if(_DEB)Console.WriteLine("nfound{0}", cparts.Count);
             string lp = "";
             if (cparts.Count < 3) return null;
             foreach (List<Image<Bgr, Byte>> cp in cparts) {
-                Console.WriteLine("charsfound{0}", cp.Count);
-                lp += (String.IsNullOrWhiteSpace(lp)?"":"-")+readPair(cp);
+                if(_DEB)Console.WriteLine("charsfound{0}", cp.Count);
+                lp += readPair(cp);
             }
             return lp;
         }
@@ -230,9 +239,9 @@ namespace SS_OpenCV
                 charsv.Add(c);
                 conf.Add(confidence);
 
-                Console.Write("{0}({1})  ", c, confidence);
+                if(_DEB)Console.Write("{0}({1})  ", c, confidence);
             }
-            Console.WriteLine();
+            if(_DEB)Console.WriteLine();
             for (int i = 0; i < charsv.Count-1; i++) {
                 for (int j = i + 1; j < charsv.Count; j++) {
                     double v = conf[i] + conf[j];
@@ -260,9 +269,9 @@ namespace SS_OpenCV
                 charsv.Add(c);
                 conf.Add(confidence);
 
-                Console.Write("{0}({1})  ", c, confidence);
+                if(_DEB)Console.Write("{0}({1})  ", c, confidence);
             }
-            Console.WriteLine();
+            if(_DEB)Console.WriteLine();
             for (int i = 0; i < charsv.Count - 1; i++)
             {
                 for (int j = i + 1; j < charsv.Count; j++)
@@ -286,7 +295,7 @@ namespace SS_OpenCV
             foreach (Image<Bgr,Byte> c in chars) {
                 if (isDot(c))
                 {
-                    Console.WriteLine("foud dot{0}", clist.Count);
+                    if(_DEB)Console.WriteLine("foud dot{0}", clist.Count);
                     if (clist.Count >= minchars)
                     {
                         cparts.Add(clist);
@@ -306,8 +315,8 @@ namespace SS_OpenCV
             double h = charimg.Height, w = charimg.Width;
             int d = 4;//4 pixels (for small images)
             double ratio = h / w;
-            Console.WriteLine("ratio:{0}", ratio);
-            return (ratio > 0.95 && ratio < 1.05)||(Math.Abs(h-w)<d);
+            if(_DEB)Console.WriteLine("ratio:{0}", ratio);
+            return ((ratio > 0.95 && ratio < 1.05)||(Math.Abs(h-w)<d) && charimg.Width < avgCharSize);
         }
 
         public static Image<Bgr, Byte> cutMain(Image<Bgr, Byte> img) {

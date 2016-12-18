@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.UI;
 using Emgu.CV.Structure;
+using System.Threading;
 
 namespace SS_OpenCV
 {
@@ -311,12 +312,13 @@ namespace SS_OpenCV
         {
             
             doAction((img)=> {
-                //LPRecognition.detectLPCharacterRegionsX(img);
-                //LPRecognition.detectLPCharacterRegionsY(img);
-                //LPRecognition.detectCharacterRegions(img, this);
-                //LPRecognition.read(img);
-                img = LPLocation.t(img);
-                return img;
+                Rectangle IGNORE;
+                string IGNOREC;
+                string c1, c2, c3, c4, c5, c6;
+                Rectangle LPLOCATION;
+                ImageClass.LP_Recognition(img, img, out LPLOCATION, out IGNORE, out IGNORE, out IGNORE, out IGNORE, out IGNORE, out IGNORE, out c1, out c2, out c3, out c4, out c5, out c6, out IGNOREC, out IGNOREC, out IGNOREC);
+
+                new Thread(()=>{ MessageBox.Show(c1 + c2 + " " + c3 + c4 + " " + c5 + c6); }).Start();
             });
         }
 

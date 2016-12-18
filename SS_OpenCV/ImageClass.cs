@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Emgu.CV.Structure;
 using Emgu.CV;
+using System.Drawing;
 
 namespace SS_OpenCV
 {
@@ -1222,6 +1223,45 @@ namespace SS_OpenCV
                 }
             }
             return new Projection(v, peak);
+        }
+
+
+        public static void LP_Recognition(
+            Image<Bgr, byte> img, // imagem a alterar
+            Image<Bgr, byte> imgCopy, // cópia da imagem
+            out Rectangle LP_Location, // rectangulo(x,y,largura, altura) contendo a matricula
+            out Rectangle LP_Chr1, // rectangulo contendo o primeiro carater
+            out Rectangle LP_Chr2, // rectangulo contendo o segundo carater
+            out Rectangle LP_Chr3, // rectangulo contendo o terceiro carater
+            out Rectangle LP_Chr4, // rectangulo contendo o quarto carater
+            out Rectangle LP_Chr5, // rectangulo contendo o quinto carater
+            out Rectangle LP_Chr6, // rectangulo contendo o sexto carater
+            out string LP_C1, // valor do primeiro carater
+            out string LP_C2, // valor do segundo carater
+            out string LP_C3, // valor do terceiro carater
+            out string LP_C4, // valor do quarto carater
+            out string LP_C5, // valor do quinto carater
+            out string LP_C6, // valor do sexto carater
+            out string LP_Country, // valor do País,
+            out string LP_Month, // valor do mês da matricula,
+            out string LP_Year) // valor do ano da matrícula
+        {
+            LP_Chr1 = new Rectangle(); LP_Chr2 = new Rectangle(); LP_Chr3 = new Rectangle();
+            LP_Chr4 = new Rectangle(); LP_Chr5 = new Rectangle(); LP_Chr6 = new Rectangle();
+            LP_Country = "?"; LP_Month = "??"; LP_Year = "??";
+            LP_C1 = "?"; LP_C2 = "?"; LP_C3 = "?"; LP_C4 = "?"; LP_C5 = "?"; LP_C6 = "?";
+
+            string lpread = LPLocation.locateAndRead(img, out LP_Location);
+
+            if (lpread != null) {
+                LP_C1 = lpread[0] + "";
+                LP_C2 = lpread[1] + "";
+                LP_C3 = lpread[2] + "";
+                LP_C4 = lpread[3] + "";
+                LP_C5 = lpread[4] + "";
+                LP_C6 = lpread[5] + "";
+                Console.WriteLine(lpread);
+            }
         }
     }
 }

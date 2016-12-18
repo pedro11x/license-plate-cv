@@ -20,18 +20,7 @@ namespace SS_OpenCV
             return null;
         }
 
-
-        public static Image<Bgr, Byte> t(Image<Bgr,Byte> _img) {
-            Image<Bgr, Byte> img = _img.Copy();
-            
-            System.Drawing.Rectangle r = getYLocationImage(img);
-            if (r != NULLR)
-                return _img.Copy(r);
-            else
-                return _img;
-        }
-
-        public static System.Drawing.Rectangle getYLocationImage(Image<Bgr, Byte> original) {
+        public static string locateAndRead(Image<Bgr, Byte> original, out System.Drawing.Rectangle lpl) {
             Image<Bgr, Byte> binary = original.Copy();
             ImageClass.OtsuBinarization(binary);
             Image<Bgr, Byte> img = binary.Copy();
@@ -46,7 +35,7 @@ namespace SS_OpenCV
             int step = (int)((p.peak*stepdiv > 1) ? (p.peak * stepdiv) : 1);
             for (int i = (int)(p.peak * 0.99); i > 0; i-=step)
             {
-                Console.WriteLine("trying for {0}", i);
+                //Console.WriteLine("trying for {0}", i);
                 List<Region> rl = LPRecognition.regionsListFromThreshold(p, i);
                 foreach (Region r in rl) {
                     Image<Bgr, Byte> cut = binary.Copy(new System.Drawing.Rectangle(0, r.startPoint, img.Width, r.delta));
@@ -55,10 +44,13 @@ namespace SS_OpenCV
                     if (frs.Count!=0) {
                         foreach (Region fr in frs) {
                             Image<Bgr, Byte> possibleLp = original.Copy(fr.x(r));
-                            iu.updateImage(possibleLp);
+                            //iu.updateImage(possibleLp);
                             string lp = LPRecognition.read(possibleLp);
                             if (!String.IsNullOrWhiteSpace(lp))
-                                return fr.x(r);
+                            {
+                                lpl = fr.x(r);
+                                return lp;
+                            }
                         }
                         
                         //return fr;
@@ -72,7 +64,8 @@ namespace SS_OpenCV
             System.Drawing.Rectangle rekt = getXLocationImage(_img.Copy(new System.Drawing.Rectangle(0, r.startPoint, img.Width, r.delta)));
             rekt.Offset(0, r.startPoint);
             */
-            return NULLR;
+            lpl = new System.Drawing.Rectangle();
+            return null;
         }
 
         public static MainForm.ImageUpdateble iu = null;
