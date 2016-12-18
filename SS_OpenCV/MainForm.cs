@@ -166,7 +166,7 @@ namespace SS_OpenCV
         {
 
             doAction((img) => {
-                ImageClass.DNegative(img);
+                ImageClass.Negative(img);
                 return img;
             });
         }

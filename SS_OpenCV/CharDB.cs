@@ -34,7 +34,7 @@ namespace SS_OpenCV
                 //loading image and making it binary
                 Image < Bgr, Byte > ci = new Image<Bgr, Byte>(file);
                 //inverting
-                ImageClass.DNegative(ci);
+                ImageClass.Negative(ci);
                 //making image binary
                 ImageClass.OtsuBinarization(ci);
                 Console.WriteLine("[Adding character {0} from file {1}]".PadLeft(4), C.ToString().ToUpper(), file);

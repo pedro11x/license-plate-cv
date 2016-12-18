@@ -10,29 +10,10 @@ namespace SS_OpenCV
     {
 
         /// <summary>
-        /// Image Negative using EmguCV library
-        /// Slower method
-        /// </summary>
-        /// <param name="img">Image</param>
-        public static void Negative(Image<Bgr, byte> img)
-        {
-            Bgr aux;
-            for (int y = 0; y < img.Height; y++)
-            {
-                for (int x = 0; x < img.Width; x++)
-                {
-                    // emguCV access: slower
-                    aux = img[y, x];
-                    img[y, x] = new Bgr(255 - aux.Blue, 255 - aux.Green, 255 - aux.Red);
-                }
-            }
-        }
-
-        /// <summary>
         /// Image Negative
         /// </summary>
         /// <param name="img">Image</param>
-        public static void DNegative(Image<Bgr, byte> img)
+        public static void Negative(Image<Bgr, byte> img)
         {
             unsafe
             {
@@ -120,6 +101,42 @@ namespace SS_OpenCV
 
         public enum Component { RED, GREEN, BLUE }
 
+        public static void RedChannel(Image<Bgr, Byte> img) {
+            unsafe
+            {
+                // direct access to the image memory(sequencial)
+                // direcion top left -> bottom right
+
+                MIplImage m = img.MIplImage;
+                byte* dataPtr = (byte*)m.imageData.ToPointer(); // Pointer to the image
+                byte gray;
+
+                int width = img.Width;
+                int height = img.Height;
+                int nChan = m.nChannels; // number of channels - 3
+                int padding = m.widthStep - m.nChannels * m.width; // alinhament bytes (padding)
+                int x, y;
+
+                if (nChan == 3) // image in RGB
+                {
+                    for (y = 0; y < height; y++)
+                    {
+                        for (x = 0; x < width; x++)
+                        {
+                            // store in the image
+                            dataPtr[0] = dataPtr[2];
+                            dataPtr[1] = dataPtr[2];
+
+                            // advance the pointer to the next pixel
+                            dataPtr += nChan;
+                        }
+                        //at the end of the line advance the pointer by the aligment bytes (padding)
+                        dataPtr += padding;
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Filter color and convert to gray
         /// Direct access to memory
@@ -172,14 +189,9 @@ namespace SS_OpenCV
         }
 
 
-        /// <summary>
-        /// Translate image
-        /// Direct access to memory
-        /// </summary>
-        /// <param name="img">image</param>
-        public static void Translate(Image<Bgr, byte> img, int dX, int dY)
+        public static void Translation(Image<Bgr, byte> img, Image<Bgr, byte> imgCopy, int dX, int dY)
         {
-            Image<Bgr, byte> source = img.Clone();
+            Image<Bgr, byte> source = imgCopy;
             unsafe
             {
                 // direct access to the image memory(sequencial)
@@ -224,6 +236,16 @@ namespace SS_OpenCV
                 }
             }
 
+        }
+
+        /// <summary>
+        /// Translate image
+        /// Direct access to memory
+        /// </summary>
+        /// <param name="img">image</param>
+        public static void Translate(Image<Bgr, byte> img, int dX, int dY)
+        {
+            Translation(img, img.Copy(), dX, dY);
         }
 
         /// <summary>
@@ -289,6 +311,7 @@ namespace SS_OpenCV
 
         }
 
+        public static void Mean(Image<Bgr, byte> img, Image<Bgr, byte> imgCopy) { Avg(img, 3); }
 
         /// <summary>
         /// Apply average filter
@@ -968,6 +991,10 @@ namespace SS_OpenCV
                 }
             }
 
+        }
+
+        public static void Sobel(Image<Bgr, byte> img, Image<Bgr, Byte> _) {
+            EdgeDetectionSobel3x3(img);
         }
 
         /// <summary>

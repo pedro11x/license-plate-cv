@@ -134,9 +134,9 @@ namespace SS_OpenCV
         public static List<Image<Bgr, Byte>> detectCharacterRegions(Image<Bgr, Byte> _img, MainForm.ImageUpdateble u) {
             Image<Bgr, Byte> img = _img;
 
-            ImageClass.DNegative(img);
+            ImageClass.Negative(img);
             ImageClass.OtsuBinarization(img);
-
+            img = cutMain(img); if (img == null) return null;
             List<Region> hrl = detectLPCharacterHorizontally(img.Copy());
 
             List<Image<Bgr, Byte>> charImages = new List<Image<Bgr, byte>>();
@@ -177,7 +177,9 @@ namespace SS_OpenCV
 
         public static string read(Image<Bgr, Byte> img) {
             List<Image<Bgr, Byte>> charImages = detectCharacterRegions(img, null);
-            
+
+            if (charImages == null) return null;
+
             string lp = readPTPlate(charImages);
             /*
             foreach (Image<Bgr, Byte> ci in charImages) {
@@ -302,10 +304,20 @@ namespace SS_OpenCV
         }
         public static bool isDot(Image<Bgr, Byte> charimg) {
             double h = charimg.Height, w = charimg.Width;
-            int d = 5;//5 pixels
+            int d = 4;//4 pixels (for small images)
             double ratio = h / w;
             Console.WriteLine("ratio:{0}", ratio);
-            return (ratio > 0.9 && ratio < 1.1)||(Math.Abs(h-w)<d);
+            return (ratio > 0.95 && ratio < 1.05)||(Math.Abs(h-w)<d);
+        }
+
+        public static Image<Bgr, Byte> cutMain(Image<Bgr, Byte> img) {
+            ImageClass.Projection p = ImageClass.VProjection(img);
+            int threshold = (int)(p.peak * 0.1);
+            List<Region> rs = regionsListFromThreshold(p, threshold);
+            int middle = img.Height / 2;
+            Region r = getMiddleRegion(rs, middle);
+            if (r == null) return null;
+            return img.Copy(new System.Drawing.Rectangle(0,r.startPoint,img.Width,r.delta));
         }
 
         public static List<Region> regionsListFromThreshold(ImageClass.Projection p, int t) {
