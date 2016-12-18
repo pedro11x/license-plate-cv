@@ -14,7 +14,7 @@ namespace SS_OpenCV
         {
             int d = (int)(p.values.Length * f / 2);
             int[] v = new int[p.values.Length];
-            Console.WriteLine("--d: {0}, size: {1}", d, p.values.Length);
+            //Console.WriteLine("--d: {0}, size: {1}", d, p.values.Length);
             p.peak = 0;
             for (int i = d; i < (p.values.Length - 1 - d); i++)
             {
@@ -210,6 +210,30 @@ namespace SS_OpenCV
 
 
             return portion;
+        }
+
+        static List<Region> joinAdjointRegions(List<Region> rs)
+        {
+            List<Region> nrs = new List<Region>();
+            Region pr = null;
+            foreach (Region r in rs)
+            {
+                if (pr == null)
+                {
+                    pr = r;
+                }
+                else if (r.startPoint - pr.endPoint <= 1)
+                {
+                    pr = new Region(pr.startPoint, r.endPoint);
+                }
+                else
+                {
+                    nrs.Add(pr);
+                    pr = r;
+                }
+            }
+            if (pr != null) nrs.Add(pr);
+            return nrs;
         }
     }
 }

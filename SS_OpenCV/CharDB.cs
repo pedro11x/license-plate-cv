@@ -33,9 +33,12 @@ namespace SS_OpenCV
                 if (fn.Length == 1) C = fn.ToUpper()[0]; else continue;
                 //loading image and making it binary
                 Image < Bgr, Byte > ci = new Image<Bgr, Byte>(file);
-                //saving image
+                //inverting
+                ImageClass.DNegative(ci);
+                //making image binary
                 ImageClass.OtsuBinarization(ci);
                 Console.WriteLine("[Adding character {0} from file {1}]".PadLeft(4), C.ToString().ToUpper(), file);
+                //saving image
                 db.Add(C, ci);
             }
 
@@ -91,6 +94,38 @@ namespace SS_OpenCV
             foreach (char c in db.Keys) {
                 double result;
                 if ((result = compareImages(img, db[c])) > bestValue) {
+                    bestMatch = c;
+                    bestValue = result;
+                }
+            }
+            return bestValue;
+        }
+        public double matchLetter(Image<Bgr, Byte> img, out char bestMatch)
+        {
+            bestMatch = '?';
+            double bestValue = 0;
+            foreach (char c in db.Keys)
+            {
+                if (c < 'A' || 'Z' < c) continue;
+                double result;
+                if ((result = compareImages(img, db[c])) > bestValue)
+                {
+                    bestMatch = c;
+                    bestValue = result;
+                }
+            }
+            return bestValue;
+        }
+        public double matchNumber(Image<Bgr, Byte> img, out char bestMatch)
+        {
+            bestMatch = '?';
+            double bestValue = 0;
+            foreach (char c in db.Keys)
+            {
+                if (c < '0' || '9' < c) continue;
+                double result;
+                if ((result = compareImages(img, db[c])) > bestValue)
+                {
                     bestMatch = c;
                     bestValue = result;
                 }
